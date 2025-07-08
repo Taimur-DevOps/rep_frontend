@@ -8,7 +8,7 @@ import { LuFacebook } from "react-icons/lu";
 import { PiInstagramLogoLight } from "react-icons/pi";
 import { PiTiktokLogoThin } from "react-icons/pi";
 import { PiYoutubeLogoThin } from "react-icons/pi";
-// asdadasdasd
+
 const About = () => {
   return (
     <>
