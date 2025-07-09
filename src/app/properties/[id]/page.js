@@ -1,14 +1,17 @@
 'use client';
 import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
-import { CiFolderOn, CiLocationOn, CiSettings } from 'react-icons/ci';
-import { PiCheckCircleLight, PiNotepadLight, PiPoliceCarLight, PiShowerLight, PiYoutubeLogoThin } from 'react-icons/pi';
+import { CiLocationOn } from 'react-icons/ci';
+import { PiCheckCircleLight, PiNotepadLight, PiPoliceCarLight, PiShowerLight } from 'react-icons/pi';
 import Gallery from '@/app/components/Gallery';
 import Breadcrumb from '@/app/components/Breadcrumb';
 import api from '@/app/Services/api';
 import { LuBedDouble } from 'react-icons/lu';
 import { TfiRulerAlt2 } from 'react-icons/tfi';
 import { SlCalender } from 'react-icons/sl';
+import { GoTasklist } from "react-icons/go";
+import { SlNote } from "react-icons/sl";
+import { RxVideo } from "react-icons/rx";
 
 
 const DetailPage = () => {
@@ -59,7 +62,7 @@ const DetailPage = () => {
 
   return (
     <>
-      <Gallery images={images} />
+      <Gallery  images={images.map((img) => ({ img }))} />
       <section className="bg-bgGray">
         <div className="lg:container mx-auto py-14">
           <div className="lg:px-0 px-5">
@@ -78,7 +81,7 @@ const DetailPage = () => {
             <div className="flex bg-white">
               {/* Left tab nav */}
               <div className="tab flex flex-col items-center lg:w-[10%] md:w-[10%] w-[20%]">
-                {['folder', 'details', 'features', 'video'].map((tab) => (
+                {['folder', 'features', 'details', 'video'].map((tab) => (
                   <div
                     key={tab}
                     className={`tablinks block w-full p-4 text-lg transition duration-300 ${
@@ -87,10 +90,10 @@ const DetailPage = () => {
                     onClick={() => setActiveTab(tab)}
                   >
                     {{
-                      folder: <CiFolderOn className="w-8 h-8 mx-auto" />,
+                      folder: <SlNote className="w-6 h-6 mx-auto" />,
                       details: <PiNotepadLight className="w-8 h-8 mx-auto" />,
-                      features: <CiSettings className="w-8 h-8 mx-auto" />,
-                      video: <PiYoutubeLogoThin className="w-8 h-8 mx-auto" />,
+                      features: <GoTasklist className="w-8 h-8 mx-auto" />,
+                      video: <RxVideo className="w-7 h-7 mx-auto" />,
                     }[tab]}
                   </div>
                 ))}
@@ -103,21 +106,6 @@ const DetailPage = () => {
                     <h3 className="text-xl font-bold my-3">Description</h3>
                     <hr className="pb-5" />
                     <p className="text-base font-normal text-lightBlack">{description}</p>
-                  </div>
-                )}
-                {activeTab === 'details' && (
-                  <div id="details">
-                    <h3 className="text-xl font-bold my-3">Details</h3>
-                    <hr className="pb-5" />
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <p><strong>Bedrooms:</strong> {bedrooms}</p>
-                      <p><strong>Bathrooms:</strong> {bathrooms}</p>
-                      <p><strong>Area Size:</strong> {areaSize}</p>
-                      <p><strong>Garage:</strong> {garage}</p>
-                      <p><strong>Year Built:</strong> {yearBuilt}</p>
-                      <p><strong>Type:</strong> {propertyType}</p>
-                      <p><strong>Status:</strong> {propertyStatus || 'N/A'}</p>
-                    </div>
                   </div>
                 )}
                 {activeTab === 'features' && (
@@ -139,7 +127,21 @@ const DetailPage = () => {
     )}
   </div>
 )}
-
+                {activeTab === 'details' && (
+                  <div id="details">
+                    <h3 className="text-xl font-bold my-3">Details</h3>
+                    <hr className="pb-5" />
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <p><strong>Bedrooms:</strong> {bedrooms}</p>
+                      <p><strong>Bathrooms:</strong> {bathrooms}</p>
+                      <p><strong>Area Size:</strong> {areaSize}</p>
+                      <p><strong>Garage:</strong> {garage}</p>
+                      <p><strong>Year Built:</strong> {yearBuilt}</p>
+                      <p><strong>Type:</strong> {propertyType}</p>
+                      <p><strong>Status:</strong> {propertyStatus || 'N/A'}</p>
+                    </div>
+                  </div>
+                )}
                 {activeTab === 'video' && <p>Video content...</p>}
               </div>
             </div>

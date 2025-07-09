@@ -14,11 +14,6 @@ import { Pagination } from "swiper/modules";
 
 const ListingCards = ({ properties }) => {
 
-  const normalizeImageUrl = (url) => {
-    if (!url) return "/default.jpg";
-    if (url.startsWith("http") || url.startsWith("/")) return url;
-    return `/${url}`;
-  };
 
   return (
     <>
@@ -39,11 +34,11 @@ const ListingCards = ({ properties }) => {
               <Link href={`/properties/${property._id}`}>
                 <div className="rounded-[4px] bg-white shadow-md relative">
                   <Swiper pagination={true} modules={[Pagination]} className="subImgsNavigation">
-                    {images.map((imgUrl, idx) => (
+                    {(images.length ? images : ["/default.jpg"]).map((imgUrl, idx) => (
                       <SwiperSlide key={idx}>
                         <Image
                           alt={`property-${id}-img-${idx}`}
-                          src={normalizeImageUrl(imgUrl)}
+                          src={imgUrl}
                           width={400}
                           height={300}
                           className="w-full h-[250px] object-cover rounded-t-[4px]"
