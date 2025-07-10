@@ -550,9 +550,6 @@ const Dashboard = () => {
               activeTab === "viewTeamMembers" ? "block" : "hidden"
             }`}
           >
-            <h1 className="text-2xl font-semibold font-nokara mb-4">
-              Team Members
-            </h1>
             <TeamList onUserDeleted={fetchDashboardStats} />
           </div>
         </div>

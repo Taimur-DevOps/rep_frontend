@@ -305,5 +305,6 @@ export const userService = {
 
 // For backward compatibility
 export const propertyAPI = propertyService;
+export const userAPI = userService;
 
 export default api;

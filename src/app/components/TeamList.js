@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import { userService } from "../Services/api";
 
 const TeamList = () => {
   const [teamMembers, setTeamMembers] = useState([]);
@@ -88,20 +89,13 @@ const TeamList = () => {
   const handleDelete = async (id) => {
     if (window.confirm("Are you sure you want to remove this team member?")) {
       try {
-        const response = await fetch(`http://localhost:5001/api/users/${id}`, {
-          method: "DELETE",
-        });
-
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-
-        // Refresh the team members list
-        fetchTeamMembers();
+        console.log("Deleting user with ID:", id);
+        await userService.deleteUser(id); // Use your Axios wrapper
+        fetchTeamMembers(); // Refresh list
         alert("Team member removed successfully!");
       } catch (err) {
         console.error("Error deleting team member:", err);
-        alert("Error removing team member: " + err.message);
+        alert("Error removing team member: " + (err.message || err));
       }
     }
   };
@@ -144,7 +138,7 @@ const TeamList = () => {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="container mx-auto">
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl font-bold text-gray-800">Team Members</h2>
         <div className="text-sm text-gray-600">
@@ -156,12 +150,6 @@ const TeamList = () => {
       {/* Filters */}
       <div className="flex flex-wrap gap-4 mb-6 p-4 bg-gray-50 rounded-lg">
         <div>
-          <label
-            htmlFor="roleFilter"
-            className="block text-sm font-medium text-gray-700 mb-1"
-          >
-            Filter by Role:
-          </label>
           <select
             id="roleFilter"
             value={filterRole}
@@ -178,12 +166,6 @@ const TeamList = () => {
         </div>
 
         <div>
-          <label
-            htmlFor="departmentFilter"
-            className="block text-sm font-medium text-gray-700 mb-1"
-          >
-            Filter by Department:
-          </label>
           <select
             id="departmentFilter"
             value={filterDepartment}
@@ -224,7 +206,7 @@ const TeamList = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredMembers.map((member) => (
             <div
-              key={member.id}
+              key={member._id}
               className="bg-white rounded-lg shadow-md p-6 border border-gray-200 hover:shadow-lg transition-shadow"
             >
               <div className="flex justify-between items-start mb-4">
@@ -240,7 +222,7 @@ const TeamList = () => {
                   </p>
                 </div>
                 <button
-                  onClick={() => handleDelete(member.id)}
+                  onClick={() => handleDelete(member._id)}
                   className="ml-4 text-red-500 hover:text-red-700 hover:bg-red-50 p-2 rounded-full transition-colors"
                   title="Remove team member"
                 >

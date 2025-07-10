@@ -1,7 +1,17 @@
-import React, { useState } from "react";
+import { useEffect, useState } from "react";
+import { useFormik, FormikProvider } from "formik";
+import * as Yup from "yup";
+import { userService } from "../Services/api";
+import { useRouter } from "next/navigation";
 
-const TeamForm = () => {
-  const [formData, setFormData] = useState({
+const TeamForm = ({ userId }) => {
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState("");
+  const [error, setError] = useState("");
+  const isEdit = Boolean(userId);
+  const router = useRouter();
+
+  const initialValues = {
     name: "",
     email: "",
     phone: "",
@@ -9,181 +19,150 @@ const TeamForm = () => {
     department: "Sales",
     bio: "",
     skills: "",
+    images: [],
+  };
+
+  const validationSchema = Yup.object({
+    name: Yup.string().required("Full name is required"),
+    email: Yup.string().email("Invalid email").required("Email is required"),
+    phone: Yup.string(),
+    role: Yup.string().required("Role is required"),
+    department: Yup.string(),
+    bio: Yup.string().max(500, "Max 500 characters"),
+    skills: Yup.string(),
   });
-  const [images, setImages] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState("");
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
+  const formik = useFormik({
+    initialValues,
+    validationSchema,
+    onSubmit: handleSubmit,
+  });
 
-  const handleImageChange = (e) => {
-    const files = Array.from(e.target.files);
-    setImages(files);
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  async function handleSubmit(values) {
     setLoading(true);
-    setMessage("");
+    setSuccess("");
+    setError("");
 
     try {
-      const submitData = new FormData();
+      const payload = {
+        ...values,
+        skills: values.skills
+          ? values.skills
+              .split(",")
+              .map((s) => s.trim())
+              .filter(Boolean)
+          : [],
+        images: values.images,
+      };
 
-      // Add form fields
-      Object.keys(formData).forEach((key) => {
-        if (key === "skills") {
-          // Convert skills string to array
-          const skillsArray = formData.skills
-            .split(",")
-            .map((skill) => skill.trim())
-            .filter((skill) => skill);
-          submitData.append("skills", JSON.stringify(skillsArray));
-        } else {
-          submitData.append(key, formData[key]);
-        }
-      });
-
-      // Add images
-      images.forEach((image) => {
-        submitData.append("images", image);
-      });
-
-      const response = await fetch("http://localhost:5001/api/users", {
-        method: "POST",
-        body: submitData,
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || "Failed to create user");
+      if (isEdit) {
+        await userService.updateUser(userId, payload);
+        setSuccess("Team member updated successfully!");
+      } else {
+        await userService.createUser(payload);
+        setSuccess("Team member created successfully!");
+        formik.resetForm();
       }
-
-      const result = await response.json();
-      console.log("User created:", result);
-
-      setMessage("Team member added successfully!");
-
-      // Reset form
-      setFormData({
-        name: "",
-        email: "",
-        phone: "",
-        role: "Agent",
-        department: "Sales",
-        bio: "",
-        skills: "",
-      });
-      setImages([]);
-
-      // Reset file input
-      const fileInput = document.getElementById("images");
-      if (fileInput) fileInput.value = "";
-    } catch (error) {
-      console.error("Error creating user:", error);
-      setMessage(`Error: ${error.message}`);
+    } catch (err) {
+      setError(err.message || "Submission failed");
     } finally {
       setLoading(false);
     }
+  }
+
+  const handleFileChange = (event) => {
+    const files = Array.from(event.currentTarget.files);
+    formik.setFieldValue("images", [...formik.values.images, ...files]);
   };
 
+  useEffect(() => {
+    const fetchUser = async () => {
+      if (isEdit) {
+        setLoading(true);
+        try {
+          const user = await userService.getUserById(userId);
+          formik.setValues({
+            ...user,
+            skills: user.skills?.join(", ") || "",
+            images: [],
+          });
+        } catch (err) {
+          setError("Failed to load user data");
+        } finally {
+          setLoading(false);
+        }
+      }
+    };
+
+    fetchUser();
+  }, [userId]);
+
   return (
-    <div className="max-w-2xl mx-auto p-6 bg-white rounded-lg shadow-md">
-      <h2 className="text-2xl font-bold mb-6 text-gray-800">
-        Add New Team Member
-      </h2>
+    <FormikProvider value={formik}>
+      <form
+        onSubmit={formik.handleSubmit}
+        className="border border-gray-300 rounded-[4px] bg-white px-6 py-7"
+      >
+        {success && (
+          <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
+            {success}
+          </div>
+        )}
+        {error && (
+          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+            {error}
+          </div>
+        )}
 
-      {message && (
-        <div
-          className={`p-4 mb-4 rounded-md ${
-            message.includes("Error")
-              ? "bg-red-100 border border-red-400 text-red-700"
-              : "bg-green-100 border border-green-400 text-green-700"
-          }`}
-        >
-          {message}
-        </div>
-      )}
-
-      <form onSubmit={handleSubmit} className="space-y-4">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label
-              htmlFor="name"
-              className="block text-sm font-medium text-gray-700 mb-1"
-            >
-              Full Name *
-            </label>
+            <label className=" text-sm font-medium">Full Name *</label>
             <input
               type="text"
-              id="name"
               name="name"
-              value={formData.name}
-              onChange={handleInputChange}
-              required
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="Enter full name"
+              value={formik.values.name}
+              onChange={formik.handleChange}
+              className="w-full px-3 py-2 border rounded"
             />
+            {formik.errors.name && formik.touched.name && (
+              <div className="text-red-500 text-sm">{formik.errors.name}</div>
+            )}
           </div>
 
           <div>
-            <label
-              htmlFor="email"
-              className="block text-sm font-medium text-gray-700 mb-1"
-            >
-              Email Address *
-            </label>
+            <label className=" text-sm font-medium">Email *</label>
             <input
               type="email"
-              id="email"
               name="email"
-              value={formData.email}
-              onChange={handleInputChange}
-              required
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="Enter email address"
+              value={formik.values.email}
+              onChange={formik.handleChange}
+              className="w-full px-3 py-2 border rounded"
             />
+            {formik.errors.email && formik.touched.email && (
+              <div className="text-red-500 text-sm">{formik.errors.email}</div>
+            )}
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
           <div>
-            <label
-              htmlFor="phone"
-              className="block text-sm font-medium text-gray-700 mb-1"
-            >
-              Phone Number
-            </label>
+            <label className=" text-sm font-medium">Phone</label>
             <input
               type="tel"
-              id="phone"
               name="phone"
-              value={formData.phone}
-              onChange={handleInputChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="Enter phone number"
+              value={formik.values.phone}
+              onChange={formik.handleChange}
+              className="w-full px-3 py-2 border rounded"
             />
           </div>
 
           <div>
-            <label
-              htmlFor="role"
-              className="block text-sm font-medium text-gray-700 mb-1"
-            >
-              Role *
-            </label>
+            <label className=" text-sm font-medium">Role *</label>
             <select
-              id="role"
               name="role"
-              value={formData.role}
-              onChange={handleInputChange}
-              required
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              value={formik.values.role}
+              onChange={formik.handleChange}
+              className="w-full px-3 border rounded"
             >
               <option value="Agent">Agent</option>
               <option value="Manager">Manager</option>
@@ -196,19 +175,13 @@ const TeamForm = () => {
           </div>
         </div>
 
-        <div>
-          <label
-            htmlFor="department"
-            className="block text-sm font-medium text-gray-700 mb-1"
-          >
-            Department
-          </label>
+        <div className="mt-4">
+          <label className=" text-sm font-medium">Department</label>
           <select
-            id="department"
             name="department"
-            value={formData.department}
-            onChange={handleInputChange}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            value={formik.values.department}
+            onChange={formik.handleChange}
+            className="w-full px-3 border rounded"
           >
             <option value="Sales">Sales</option>
             <option value="Marketing">Marketing</option>
@@ -220,102 +193,61 @@ const TeamForm = () => {
           </select>
         </div>
 
-        <div>
-          <label
-            htmlFor="skills"
-            className="block text-sm font-medium text-gray-700 mb-1"
-          >
+        <div className="mt-4">
+          <label className=" text-sm font-medium">
             Skills (comma-separated)
           </label>
           <input
             type="text"
-            id="skills"
             name="skills"
-            value={formData.skills}
-            onChange={handleInputChange}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            placeholder="e.g., Real Estate, Sales, Marketing, Communication"
+            value={formik.values.skills}
+            onChange={formik.handleChange}
+            className="w-full px-3 py-2 border rounded"
+            placeholder="e.g. Marketing, Sales, Design"
           />
         </div>
 
-        <div>
-          <label
-            htmlFor="bio"
-            className="block text-sm font-medium text-gray-700 mb-1"
-          >
-            Bio
-          </label>
+        <div className="mt-4">
+          <label className=" text-sm font-medium">Bio</label>
           <textarea
-            id="bio"
             name="bio"
-            value={formData.bio}
-            onChange={handleInputChange}
+            value={formik.values.bio}
+            onChange={formik.handleChange}
             rows="3"
-            maxLength="500"
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            placeholder="Brief description about the team member"
+            className="w-full px-3 py-2 border rounded"
           />
           <p className="text-sm text-gray-500 mt-1">
-            {formData.bio.length}/500 characters
+            {formik.values.bio.length}/500 characters
           </p>
         </div>
 
-        <div>
-          <label
-            htmlFor="images"
-            className="block text-sm font-medium text-gray-700 mb-1"
-          >
-            Profile Images
-          </label>
+        <div className="mt-4">
+          <label className=" text-sm font-medium">Profile Images</label>
           <input
             type="file"
-            id="images"
             multiple
             accept="image/*"
-            onChange={handleImageChange}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            onChange={handleFileChange}
+            className="w-full"
           />
           <p className="text-sm text-gray-500 mt-1">
-            Select up to 5 images (max 5MB each)
+            Upload multiple profile images
           </p>
         </div>
 
-        <div className="flex justify-end space-x-4 pt-4">
-          <button
-            type="button"
-            onClick={() => {
-              setFormData({
-                name: "",
-                email: "",
-                phone: "",
-                role: "Agent",
-                department: "Sales",
-                bio: "",
-                skills: "",
-              });
-              setImages([]);
-              setMessage("");
-              const fileInput = document.getElementById("images");
-              if (fileInput) fileInput.value = "";
-            }}
-            className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          >
-            Reset
-          </button>
+        <div className="flex justify-end mt-6">
           <button
             type="submit"
             disabled={loading}
-            className={`px-6 py-2 rounded-md text-white font-medium focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-              loading
-                ? "bg-gray-400 cursor-not-allowed"
-                : "bg-blue-600 hover:bg-blue-700"
-            }`}
+            className={`py-2 px-5 ${
+              loading ? "bg-gray-400" : "bg-green-500"
+            } text-white rounded`}
           >
-            {loading ? "Adding..." : "Add Team Member"}
+            {loading ? "Saving..." : "Save"}
           </button>
         </div>
       </form>
-    </div>
+    </FormikProvider>
   );
 };
 
