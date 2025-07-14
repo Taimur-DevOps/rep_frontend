@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { FaStar, FaRegStar } from "react-icons/fa";
 
 const TableListing = ({ onEdit, onAddNew }) => {
   const [properties, setProperties] = useState([]);
@@ -81,6 +82,7 @@ const TableListing = ({ onEdit, onAddNew }) => {
       </div>
     );
   }
+  console.log(properties);
 
   if (error) {
     return (
@@ -98,7 +100,7 @@ const TableListing = ({ onEdit, onAddNew }) => {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="container mx-auto">
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl font-bold text-gray-800">Properties</h2>
         <button
@@ -126,7 +128,7 @@ const TableListing = ({ onEdit, onAddNew }) => {
               <thead className="bg-gray-50">
                 <tr>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Property ID
+                    ID
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Title
@@ -141,7 +143,13 @@ const TableListing = ({ onEdit, onAddNew }) => {
                     Type
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Feature
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Bedrooms
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Images
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Actions
@@ -167,7 +175,31 @@ const TableListing = ({ onEdit, onAddNew }) => {
                       {property.propertyType}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      {property.featured ? (
+                        <FaStar
+                          className="text-yellow-500 text-sm"
+                          title="Featured Property"
+                        />
+                      ) : (
+                        <FaRegStar
+                          className="text-gray-400 text-sm"
+                          title="Not Featured"
+                        />
+                      )}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                       {property.bedrooms}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      {property.images && property.images.length > 0 ? (
+                        <img
+                          src={property.images[0]} // Display the first image
+                          alt={property.title}
+                          className="w-16 h-16 object-cover rounded"
+                        />
+                      ) : (
+                        <span className="text-gray-400 italic">No Image</span>
+                      )}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                       <button

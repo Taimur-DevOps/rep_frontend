@@ -512,9 +512,6 @@ const Dashboard = () => {
               activeTab === "listing" ? "block" : "hidden"
             }`}
           >
-            <h1 className="text-2xl font-semibold font-nokara mb-4">
-              Listing of Properties
-            </h1>
             <TableListing
               onEdit={handleEditProperty}
               onAddNew={handleAddNewProperty}

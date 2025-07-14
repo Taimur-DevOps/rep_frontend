@@ -11,6 +11,7 @@ const AdminListingForm = ({ propertyId }) => {
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
   const [isEdit, setIsEdit] = useState(false);
+  const [existingImageCount, setExistingImageCount] = useState(0); // new line
   const router = useRouter();
 
   const initialValues = {
@@ -74,9 +75,11 @@ const AdminListingForm = ({ propertyId }) => {
         try {
           const data = await propertyService.getPropertyById(propertyId);
           // Format the data for formik
+          setExistingImageCount(data.images?.length || 0); // get count of existing images
+
           const formattedData = {
             ...data,
-            images: [], // We don't get the File objects back from the API
+            images: [], // clear file list for new uploads
           };
           formik.setValues(formattedData);
         } catch (error) {
@@ -100,10 +103,13 @@ const AdminListingForm = ({ propertyId }) => {
       if (isEdit) {
         await propertyService.updateProperty(propertyId, values);
         setSuccess("Property updated successfully!");
+        setExistingImageCount(existingImageCount + values.images.length); // update count
+        formik.setFieldValue("images", []); // clear newly selected files
       } else {
         await propertyService.createProperty(values);
         setSuccess("Property created successfully!");
         formik.resetForm();
+        setExistingImageCount(0); // reset count
       }
     } catch (error) {
       setError(error.message || "An error occurred while saving the property");
@@ -131,6 +137,19 @@ const AdminListingForm = ({ propertyId }) => {
 
   const handleFileChange = (event) => {
     const files = Array.from(event.currentTarget.files);
+    const totalImages =
+      existingImageCount + formik.values.images.length + files.length;
+
+    if (totalImages > 30) {
+      setError(
+        `You can upload a maximum of 30 images. You already have ${existingImageCount} and selected ${
+          formik.values.images.length + files.length
+        }`
+      );
+      return;
+    }
+
+    setError(null); // Clear previous errors
     formik.setFieldValue("images", [...formik.values.images, ...files]);
   };
 
@@ -190,20 +209,20 @@ const AdminListingForm = ({ propertyId }) => {
               ]}
             />
           </div>
-          
+
           {/* beds bath area */}
           <div className="grid grid-cols-3 gap-5">
             <Field type="number" name="bedrooms" label="Bedrooms" />
             <Field type="number" name="bathrooms" label="Bathrooms" />
             <Field type="number" name="garage" label="Garage" />
           </div>
-          
+
           {/* price year build */}
           <div className="grid grid-cols-2 gap-5">
             <Field type="number" name="yearBuilt" label="Year Built" />
             <Field type="number" name="price" label="Price" />
           </div>
-          
+
           {/* featured property  */}
           <Field type="checkbox" name="featured" label="Featured" />
 
@@ -237,7 +256,7 @@ const AdminListingForm = ({ propertyId }) => {
               Add Feature
             </button>
           </div>
-          
+
           {/* upload images */}
           <div>
             <label className="block text-sm font-medium text-gray-700">
@@ -254,13 +273,16 @@ const AdminListingForm = ({ propertyId }) => {
                 file:bg-green-50 file:text-green-700
                 hover:file:bg-green-100"
             />
-            {formik.values.images.length > 0 && (
-              <div className="mt-2">
-                <p className="text-sm text-gray-500">
-                  {formik.values.images.length} file(s) selected
-                </p>
-              </div>
-            )}
+            <div className="mt-2">
+              {existingImageCount > 0 && (
+                <div className="mt-2">
+                  <p className="text-sm text-gray-500">
+                    {existingImageCount} image
+                    {existingImageCount > 1 ? "s" : ""} already uploaded
+                  </p>
+                </div>
+              )}
+            </div>
           </div>
 
           {/* submit btn */}

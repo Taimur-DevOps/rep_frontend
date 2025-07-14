@@ -14,11 +14,8 @@ const Settings = () => {
         <div className="w-2/6 shadow-md h-full">
           <HeroFormAdmin />
         </div>
-        <div className="w-2/3 shadow-md h-full">
-          <HeroTableListing />
-        </div>
       </main>
-      <h1 className="text-2xl font-semibold font-nokara mb-2">Team details</h1>
+      {/* <h1 className="text-2xl font-semibold font-nokara mb-2">Team details</h1>
       <main className="flex flex-row gap-7 mb-7">
         <div className="w-2/6 shadow-md h-full">
           <TeamForm />
@@ -26,7 +23,7 @@ const Settings = () => {
         <div className="w-2/3 shadow-md h-full">
           <TeamList />
         </div>
-      </main>
+      </main> */}
     </>
   );
 };
