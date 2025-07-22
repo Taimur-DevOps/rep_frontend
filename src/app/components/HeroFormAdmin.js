@@ -13,39 +13,12 @@ const HeroFormAdmin = () => {
   
   const formik = useFormik({
     initialValues: {
-      propertyId: `P-${Math.floor(1000 + Math.random() * 9000)}`, // Generate a random property ID
       title: "",
-      description: "",
-      location: "",
-      price: "",
-      houseNumber: "",
-      blockNumber: "",
       images: [],
-      propertyType: "house",
-      bedrooms: "",
-      bathrooms: "",
-      garage: "0",
-      areaSize: "",
-      yearBuilt: new Date().getFullYear().toString(),
-      featured: false,
-      features: [],
+
     },
     validationSchema: Yup.object({
       title: Yup.string().required("Required"),
-      description: Yup.string().required("Required"),
-      location: Yup.string().required("Required"),
-      price: Yup.number().required("Required").positive("Must be positive"),
-      bedrooms: Yup.number()
-        .required("Required")
-        .positive("Must be positive")
-        .integer("Must be an integer"),
-      bathrooms: Yup.number()
-        .required("Required")
-        .positive("Must be positive")
-        .integer("Must be an integer"),
-      areaSize: Yup.string().required("Required"),
-      houseNumber: Yup.string().required("Required"),
-      blockNumber: Yup.string().required("Required"),
     }),
     onSubmit: async (values) => {
       setIsLoading(true);
@@ -87,56 +60,12 @@ const HeroFormAdmin = () => {
               {success}
             </div>
           )}
-          
-          {/* property Id and Title */}
-          <main className="flex flex-col gap-3">
-            <div className="grid grid-cols-3 gap-4">
-              <Field type="text" name="propertyId" label="Property ID" />
-              <Field type="text" name="houseNumber" label="House No." />
-              <Field type="text" name="blockNumber" label="Block Name" />
-            </div>
-            
-            {/*location Title Description */}
-            <Field type="text" name="title" label="Title" />
-            <Field type="text" name="location" label="Location" />
-            <Field type="textarea" name="description" label="Description" />
-
-            {/* Property Type and Price */}
-            <div className="grid grid-cols-2 gap-4">
-              <Field
-                type="select"
-                name="propertyType"
-                label="Property Type"
-                options={[
-                  { value: "house", label: "House" },
-                  { value: "apartment", label: "Apartment" },
-                  { value: "farmhouse", label: "Farm House" },
-                  { value: "commercial", label: "Commercial" },
-                ]}
-              />
-              <Field type="number" name="price" label="Price" />
-            </div>
-
-            {/* BedRoom, BathRooms, areaSize */}
-            <div className="grid grid-cols-3 gap-4">
-              <Field type="number" name="bedrooms" label="Bedrooms" />
-              <Field type="number" name="bathrooms" label="Bathrooms" />
-              <Field type="number" name="garage" label="Garage" />
-            </div>
-
-            <div className="grid grid-cols-2 gap-4">
-              <Field type="text" name="areaSize" label="Area Size" />
-              <Field type="number" name="yearBuilt" label="Year Built" />
-            </div>
-            
-            {/* Featured Property */}
-            <Field type="checkbox" name="featured" label="Featured" />
             
             {/* Upload Images */}
             <div>
-              <label className="block text-sm font-medium text-gray-700">
-                Property Images
-              </label>
+              {/* <label className="block text-sm font-medium text-gray-700">
+                Hero sectiom Images
+              </label> */}
               <input
                 type="file"
                 multiple
@@ -156,7 +85,6 @@ const HeroFormAdmin = () => {
                 </div>
               )}
             </div>
-          </main>
 
           {/* submit btn */}
           <hr className="mt-4 mb-2" />

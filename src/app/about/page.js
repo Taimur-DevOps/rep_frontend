@@ -5,6 +5,7 @@ import Image from "next/image";
 import { LuFacebook } from "react-icons/lu";
 import { PiTiktokLogoThin, PiInstagramLogoLight, PiYoutubeLogoThin } from "react-icons/pi";
 import { userService } from "../Services/api";
+import BASE_API_URL from "@/config";
 
 const About = () => {
   const [teamMembers, setTeamMembers] = useState([]);
@@ -70,13 +71,13 @@ const About = () => {
             {teamMembers.map((member, index) => (
               <div key={index} className="teamMember1 relative">
                 <div>
-                 <Image
-  alt={member.name}
-  src={member.images[0]} // assuming at least one image
-  width={300}
-  height={300}
-  className="object-cover w-full h-[300px]"
-/>
+                <Image
+                  alt={member.name}
+                  src={`${BASE_API_URL}${member.images[0]}`}
+                  width={300}
+                  height={300}
+                  className="object-cover w-full h-[365px]"
+                />
                   <div className="card">
                     <span className="font-semibold">{member.name}</span>
                     <span>{member.role}</span>

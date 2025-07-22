@@ -28,51 +28,6 @@ const TeamList = () => {
     } catch (err) {
       console.error("Error fetching team members:", err);
 
-      // Fallback to mock data for development
-      console.log("Using mock data for development...");
-      const mockData = [
-        {
-          id: 1,
-          name: "John Doe",
-          role: "Software Engineer",
-          department: "Engineering",
-          email: "john.doe@company.com",
-          phone: "+1 (555) 123-4567",
-          location: "New York, NY",
-          joinDate: "2023-01-15",
-        },
-        {
-          id: 2,
-          name: "Jane Smith",
-          role: "Product Manager",
-          department: "Product",
-          email: "jane.smith@company.com",
-          phone: "+1 (555) 234-5678",
-          location: "San Francisco, CA",
-          joinDate: "2022-11-20",
-        },
-        {
-          id: 3,
-          name: "Mike Johnson",
-          role: "UX Designer",
-          department: "Design",
-          email: "mike.johnson@company.com",
-          phone: "+1 (555) 345-6789",
-          location: "Austin, TX",
-          joinDate: "2023-03-10",
-        },
-        {
-          id: 4,
-          name: "Sarah Wilson",
-          role: "Marketing Specialist",
-          department: "Marketing",
-          email: "sarah.wilson@company.com",
-          phone: "+1 (555) 456-7890",
-          location: "Chicago, IL",
-          joinDate: "2023-02-28",
-        },
-      ];
-
       setTeamMembers(mockData);
       setError(
         "Could not connect to server. Showing mock data for development."
@@ -241,6 +196,19 @@ const TeamList = () => {
                   </svg>
                 </button>
               </div>
+
+              {member.images && member.images.length > 0 && (
+  <div className="flex gap-2 mb-4">
+    {member.images.map((imgSrc, index) => (
+      <img
+        key={index}
+        src={`http://localhost:5001${imgSrc}`}
+        alt={`${member.name} ${index}`}
+        className="w-16 h-16 rounded-full object-cover border"
+      />
+    ))}
+  </div>
+)}
 
               {/* Contact Information */}
               <div className="space-y-2 text-sm text-gray-600">

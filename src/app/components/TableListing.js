@@ -82,7 +82,6 @@ const TableListing = ({ onEdit, onAddNew }) => {
       </div>
     );
   }
-  console.log(properties);
 
   if (error) {
     return (

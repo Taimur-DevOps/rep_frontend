@@ -8,7 +8,7 @@ const Settings = () => {
   return (
     <>
       <h1 className="text-2xl font-semibold font-nokara mb-2">
-        Hero section details
+        Hero section detail
       </h1>
       <main className=" flex flex-row gap-7 mb-7">
         <div className="w-2/6 shadow-md h-full">
