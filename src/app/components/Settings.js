@@ -1,10 +1,9 @@
 import React from "react";
 import HeroFormAdmin from "./HeroFormAdmin";
-import HeroTableListing from "./HeroTableListing";
-import TeamForm from "./TeamForm";
-import TeamList from "./TeamList";
+import HeroListing from "./HeroListing";
 
 const Settings = () => {
+
   return (
     <>
       <h1 className="text-2xl font-semibold font-nokara mb-2">
@@ -13,6 +12,9 @@ const Settings = () => {
       <main className=" flex flex-row gap-7 mb-7">
         <div className="w-2/6 shadow-md h-full">
           <HeroFormAdmin />
+        </div>
+        <div className="">
+          <HeroListing />
         </div>
       </main>
       {/* <h1 className="text-2xl font-semibold font-nokara mb-2">Team details</h1>

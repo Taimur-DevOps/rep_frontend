@@ -303,8 +303,85 @@ export const userService = {
   },
 };
 
+
+// Hero Section APIs 
+export const heroService = {
+  // Get all hero sections
+  getAllHeroSections: async () => {
+    try {
+      console.log("Calling /hero-section");
+      const response = await api.get("/hero-section");
+      console.log(response.data)
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || error.message;
+    }
+  },
+
+  // Create hero section
+  createHeroSection: async (heroData) => {
+    try {
+      const formData = new FormData();
+      if (heroData.images && heroData.images.length > 0) {
+        heroData.images.forEach((image) => {
+          formData.append("images", image);
+        });
+      }
+      if (heroData.title) {
+        formData.append("title", heroData.title);
+      }
+
+      const response = await api.post("/hero-section", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || error.message;
+    }
+  },
+
+  // Update
+  updateHeroSection: async (id, heroData) => {
+    try {
+      const formData = new FormData();
+      if (heroData.images && heroData.images.length > 0) {
+        heroData.images.forEach((image) => {
+          formData.append("images", image);
+        });
+      }
+      if (heroData.title) {
+        formData.append("title", heroData.title);
+      }
+
+      const response = await api.put(`/hero-section/${id}`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || error.message;
+    }
+  },
+
+  // Delete hero image
+  deleteHeroImage: async (heroId, imageIndex) => {
+    try {
+      const response = await api.delete(`/hero-section/${heroId}/images/${imageIndex}`);
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || error.message;
+    }
+  },
+};
+
+
 // For backward compatibility
 export const propertyAPI = propertyService;
 export const userAPI = userService;
+export const HeroAPI = heroService;
 
 export default api;
