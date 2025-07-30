@@ -368,16 +368,28 @@ export const heroService = {
     }
   },  
 
-  // Delete specific image by index
-  deleteHeroImage: async (heroId, imageIndex) => {
-    try {
-      const response = await api.delete(`/hero-section/${heroId}/images/${imageIndex}`);
-      return response.data;
-    } catch (error) {
-      throw error.response?.data || error.message;
-    }
-  },
-};
+// Delete entire hero section
+// Delete specific image by index
+deleteHeroImage: async (heroId, imageIndex) => {
+  try {
+    const response = await api.delete(`/hero-section/${heroId}/images/${imageIndex}`);
+    return response.data;
+  } catch (error) {
+    throw error.response?.data || error.message;
+  }
+},
+
+// Delete all hero sections
+clearAllHeroSections: async () => {
+  try {
+    const response = await api.delete("/hero-section");
+    return response.data;
+  } catch (error) {
+    throw error.response?.data || error.message;
+  }
+}
+
+}
 
 // For backward compatibility
 export const propertyAPI = propertyService;

@@ -35,11 +35,22 @@ const HeroListing = () => {
   }, []);
 
   // Handle image removal locally
-  const handleRemoveImage = (index) => {
-    const updatedImages = localImages.filter((_, i) => i !== index);
-    setLocalImages(updatedImages);
-    setUpdatePending(true);
-  };
+  const handleRemoveImage = async (index) => {
+    if (!heroId) return;
+  
+    try {
+      // Call backend to delete the image
+      await heroService.deleteHeroImage(heroId, index);
+  
+      // Update local state after successful delete
+      const updatedImages = localImages.filter((_, i) => i !== index);
+      setLocalImages(updatedImages);
+      toast.success("Image deleted successfully");
+    } catch (error) {
+      console.error("Failed to delete image:", error);
+      toast.error("Failed to delete image");
+    }
+  };  
 
   // ✅ Add this to track new file uploads
   const handleFileInputChange = (e) => {
@@ -50,23 +61,29 @@ const HeroListing = () => {
 
   // Handle update (send modified image array to backend)
   const handleUpdateImages = async () => {
-    if (!heroId) return;
     try {
-      await heroService.updateHeroSection(heroId, {
-        images: newImages,               // new uploads
-        existingImages: localImages,    // preserved
-      });
-
-      toast.success("Images updated successfully");
-
-      // Reset file input state
+      if (heroId) {
+        // Update existing hero section
+        await heroService.updateHeroSection(heroId, {
+          images: newImages,
+          existingImages: localImages,
+        });
+        toast.success("Images updated successfully");
+      } else {
+        // No hero section exists — create a new one
+        const created = await heroService.createHeroSection({ images: newImages });
+        toast.success("New hero section created");
+        setHeroId(created._id); // Save new ID
+      }
+  
+      // Refresh UI
       setNewImages([]);
       setUpdatePending(false);
-      fetchHeroData(); // reload updated images
+      fetchHeroData();
     } catch (error) {
       toast.error("Update failed");
     }
-  };
+  };  
 
   return (
     <div className="p-6 bg-white rounded shadow">
@@ -128,7 +145,7 @@ const HeroListing = () => {
       )}
 
       {/* ✅ Update Button if something has changed */}
-      {updatePending && (
+      {updatePending && newImages.length > 0 &&  (
         <div className="mt-6 flex justify-end">
           <button
             onClick={handleUpdateImages}
@@ -138,6 +155,25 @@ const HeroListing = () => {
           </button>
         </div>
       )}
+      <button
+  onClick={async () => {
+    if (confirm("Are you sure you want to delete ALL hero section data?")) {
+      try {
+        await heroService.clearAllHeroSections();
+        toast.success("All hero sections cleared");
+        setHeroData([]);         // Reset frontend state
+        setLocalImages([]);
+        setHeroId(null);
+      } catch (err) {
+        toast.error("Failed to clear hero sections");
+      }
+    }
+  }}
+  className="text-sm bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
+>
+  Clear All
+</button>
+
     </div>
   );
 };
