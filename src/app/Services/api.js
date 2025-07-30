@@ -309,26 +309,22 @@ export const heroService = {
   // Get all hero sections
   getAllHeroSections: async () => {
     try {
-      console.log("Calling /hero-section");
       const response = await api.get("/hero-section");
-      console.log(response.data)
       return response.data;
     } catch (error) {
       throw error.response?.data || error.message;
     }
   },
 
-  // Create hero section
+  // Create a new hero section (images only)
   createHeroSection: async (heroData) => {
     try {
       const formData = new FormData();
+
       if (heroData.images && heroData.images.length > 0) {
         heroData.images.forEach((image) => {
           formData.append("images", image);
         });
-      }
-      if (heroData.title) {
-        formData.append("title", heroData.title);
       }
 
       const response = await api.post("/hero-section", formData, {
@@ -343,31 +339,36 @@ export const heroService = {
     }
   },
 
-  // Update
+  // Update hero section images
   updateHeroSection: async (id, heroData) => {
     try {
       const formData = new FormData();
+  
+      // Add new uploaded images (optional)
       if (heroData.images && heroData.images.length > 0) {
         heroData.images.forEach((image) => {
           formData.append("images", image);
         });
       }
-      if (heroData.title) {
-        formData.append("title", heroData.title);
+  
+      // ✅ Send the preserved images
+      if (heroData.existingImages && heroData.existingImages.length > 0) {
+        formData.append("existingImages", JSON.stringify(heroData.existingImages));
       }
-
+  
       const response = await api.put(`/hero-section/${id}`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
       });
+  
       return response.data;
     } catch (error) {
       throw error.response?.data || error.message;
     }
-  },
+  },  
 
-  // Delete hero image
+  // Delete specific image by index
   deleteHeroImage: async (heroId, imageIndex) => {
     try {
       const response = await api.delete(`/hero-section/${heroId}/images/${imageIndex}`);
@@ -377,7 +378,6 @@ export const heroService = {
     }
   },
 };
-
 
 // For backward compatibility
 export const propertyAPI = propertyService;

@@ -7,13 +7,13 @@ const Settings = () => {
   return (
     <>
       <h1 className="text-2xl font-semibold font-nokara mb-2">
-        Hero section detail
+        Hero section 
       </h1>
       <main className=" flex flex-row gap-7 mb-7">
-        <div className="w-2/6 shadow-md h-full">
+        {/* <div className="w-2/5">
           <HeroFormAdmin />
-        </div>
-        <div className="">
+        </div> */}
+        <div className="w-3/5">
           <HeroListing />
         </div>
       </main>

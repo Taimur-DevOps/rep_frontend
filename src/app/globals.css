@@ -85,12 +85,12 @@
   /* top: 765px !important; */
   padding: 10px 5px !important;
 }
-input,
+/* input,
 label,
 select,
 button {
   height: 38px !important;
-}
+} */
 select {
   appearance: none;
 }

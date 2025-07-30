@@ -1,135 +1,142 @@
 import { useEffect, useState } from "react";
-import Image from "next/image";
 import { toast } from "react-toastify";
 import { heroService } from "../Services/api";
+import Image from "next/image";
+import BASE_API_URL from "@/config";
+import { RxCross2 } from "react-icons/rx";
 
 const HeroListing = () => {
-  const [heroSections, setHeroSections] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [updateEnabled, setUpdateEnabled] = useState(false);
-  const [updating, setUpdating] = useState(false);
+  const [heroData, setHeroData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [localImages, setLocalImages] = useState([]);
+  const [heroId, setHeroId] = useState(null);
+  const [updatePending, setUpdatePending] = useState(false);
+  const [newImages, setNewImages] = useState([]);
 
-  useEffect(() => {
-    fetchAllHeroSections();
-  }, []);
-
-  const fetchAllHeroSections = async () => {
+  // Fetch all hero sections
+  const fetchHeroData = async () => {
+    setLoading(true);
     try {
-      setLoading(true);
       const data = await heroService.getAllHeroSections();
-      setHeroSections(data);
-    } catch (err) {
-      console.error("Error fetching hero sections", err);
-      toast.error("Failed to load hero sections.");
+      if (data.length > 0) {
+        setHeroId(data[0]._id);
+        setLocalImages(data[0].images);
+      }
+      setHeroData(data);
+    } catch (error) {
+      toast.error("Failed to fetch hero sections");
     } finally {
       setLoading(false);
     }
   };
 
-  const handleDeleteImage = async (sectionId, imageIndex) => {
-    try {
-      await heroService.deleteHeroImage(sectionId, imageIndex);
-      const updatedSections = heroSections.map((section) => {
-        if (section._id === sectionId) {
-          const newImages = [...section.images];
-          newImages.splice(imageIndex, 1);
-          return { ...section, images: newImages };
-        }
-        return section;
-      });
+  useEffect(() => {
+    fetchHeroData();
+  }, []);
 
-      setHeroSections(updatedSections);
-      setUpdateEnabled(true);
-      toast.success("Image deleted.");
-    } catch (err) {
-      console.error("Delete failed", err);
-      toast.error("Failed to delete image.");
-    }
+  // Handle image removal locally
+  const handleRemoveImage = (index) => {
+    const updatedImages = localImages.filter((_, i) => i !== index);
+    setLocalImages(updatedImages);
+    setUpdatePending(true);
   };
 
-  const handleUpdateAll = async () => {
+  // ✅ Add this to track new file uploads
+  const handleFileInputChange = (e) => {
+    const files = Array.from(e.target.files);
+    setNewImages((prev) => [...prev, ...files]);
+    setUpdatePending(true); // allow update button to appear
+  };
+
+  // Handle update (send modified image array to backend)
+  const handleUpdateImages = async () => {
+    if (!heroId) return;
     try {
-      setUpdating(true);
-      for (const section of heroSections) {
-        await heroService.updateHeroSection(section._id, {
-          title: section.title,
-          images: section.images.filter((img) => typeof img === "string"),
-        });
-      }
-      setUpdateEnabled(false);
-      toast.success("All hero sections updated.");
-    } catch (err) {
-      console.error("Update failed", err);
-      toast.error("Failed to update sections.");
-    } finally {
-      setUpdating(false);
+      await heroService.updateHeroSection(heroId, {
+        images: newImages,               // new uploads
+        existingImages: localImages,    // preserved
+      });
+
+      toast.success("Images updated successfully");
+
+      // Reset file input state
+      setNewImages([]);
+      setUpdatePending(false);
+      fetchHeroData(); // reload updated images
+    } catch (error) {
+      toast.error("Update failed");
     }
   };
 
   return (
-    <div className="mt-6 border p-4 rounded bg-white">
-      <h2 className="text-lg font-semibold mb-3">Hero Sections</h2>
+    <div className="p-6 bg-white rounded shadow">
+      <div className="flex justify-between items-center mb-4">
+        <h6 className="text-lg font-semibold">All Images</h6>
+        <button
+          onClick={fetchHeroData}
+          className="flex items-center gap-2 text-sm px-3 py-1 bg-gray-200 rounded hover:bg-gray-300"
+        >
+          Refresh
+        </button>
+      </div>
 
+      {/* ✅ File Upload Input */}
+      <div className="mb-4">
+        <input
+          type="file"
+          multiple
+          accept="image/*"
+          onChange={handleFileInputChange}
+          className="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-green-50 file:text-green-700 hover:file:bg-green-100"
+        />
+        {newImages.length > 0 && (
+          <p className="text-sm text-gray-500 mt-1">
+            {newImages.length} new image(s) selected
+          </p>
+        )}
+      </div>
+
+      {/* ✅ Preview Existing Images */}
       {loading ? (
         <p>Loading...</p>
-      ) : heroSections.length === 0 ? (
-        <p className="text-sm text-gray-500">No hero sections found.</p>
+      ) : localImages.length === 0 ? (
+        <p>No hero images found.</p>
       ) : (
-        <>
-          {heroSections.map((section) => (
-            <div key={section._id} className="mb-8 border-b pb-4">
-              <h3 className="font-medium mb-2">{section.title}</h3>
-              <div className="flex flex-wrap gap-3">
-                {section.images?.map((img, idx) => (
-                  <div
-                    key={idx}
-                    className="relative w-32 h-32 border rounded overflow-hidden"
-                  >
-                    <Image
-                      src={img}
-                      alt={`Hero Image ${idx}`}
-                      layout="fill"
-                      objectFit="cover"
-                    />
-                    <button
-                      onClick={() => handleDeleteImage(section._id, idx)}
-                      className="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1 hover:bg-red-600"
-                      title="Remove image"
-                    >
-                      <svg
-                        className="w-5 h-5"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                        />
-                      </svg>
-                    </button>
-                  </div>
-                ))}
-              </div>
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          {localImages.map((img, index) => (
+            <div
+              key={index}
+              className="relative border rounded overflow-hidden shadow-sm"
+            >
+              <Image
+                src={`${BASE_API_URL}${img}`}
+                alt={`Hero ${index}`}
+                width={300}
+                height={300}
+                className="w-full h-40 object-cover"
+              />
+              <button
+                onClick={() => handleRemoveImage(index)}
+                className="absolute top-2 right-2 bg-red-600 text-white p-1 rounded-full hover:bg-red-700"
+                title="Remove Image"
+              >
+                <RxCross2 size={14} />
+              </button>
             </div>
           ))}
+        </div>
+      )}
 
-          <div className="mt-6 text-right">
-            <button
-              onClick={handleUpdateAll}
-              disabled={!updateEnabled || updating}
-              className={`py-2 px-6 rounded text-white bg-blue-600 ${
-                !updateEnabled || updating
-                  ? "opacity-50 cursor-not-allowed"
-                  : "hover:bg-blue-700"
-              }`}
-            >
-              {updating ? "Updating..." : "Update All"}
-            </button>
-          </div>
-        </>
+      {/* ✅ Update Button if something has changed */}
+      {updatePending && (
+        <div className="mt-6 flex justify-end">
+          <button
+            onClick={handleUpdateImages}
+            className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
+          >
+            Save
+          </button>
+        </div>
       )}
     </div>
   );
