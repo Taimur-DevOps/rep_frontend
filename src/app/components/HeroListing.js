@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import { toast } from "react-toastify";
 import { heroService } from "../Services/api";
 import Image from "next/image";
@@ -7,100 +7,111 @@ import { RxCross2 } from "react-icons/rx";
 
 const HeroListing = () => {
   const [heroData, setHeroData] = useState([]);
-  const [loading, setLoading] = useState(true);
   const [localImages, setLocalImages] = useState([]);
-  const [heroId, setHeroId] = useState(null);
-  const [updatePending, setUpdatePending] = useState(false);
   const [newImages, setNewImages] = useState([]);
+  const [heroId, setHeroId] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [updatePending, setUpdatePending] = useState(false);
+  const fileInputRef = useRef(null);
 
-  // Fetch all hero sections
-  const fetchHeroData = async () => {
+  const hasChanges = newImages.length > 0 || updatePending;
+
+  const resetFileInput = () => {
+    if (fileInputRef.current) fileInputRef.current.value = "";
+  };
+
+  const fetchHeroData = useCallback(async () => {
     setLoading(true);
     try {
       const data = await heroService.getAllHeroSections();
-      if (data.length > 0) {
+      if (data.length) {
+        setHeroData(data);
         setHeroId(data[0]._id);
         setLocalImages(data[0].images);
+      } else {
+        setHeroData([]);
+        setHeroId(null);
+        setLocalImages([]);
       }
-      setHeroData(data);
-    } catch (error) {
+    } catch {
       toast.error("Failed to fetch hero sections");
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
     fetchHeroData();
-  }, []);
+  }, [fetchHeroData]);
 
-  // Handle image removal locally
   const handleRemoveImage = async (index) => {
-    if (!heroId) return;
-  
+    const imageToDelete = localImages[index];
+    if (!heroId || !imageToDelete) return;
+
     try {
-      // Call backend to delete the image
-      await heroService.deleteHeroImage(heroId, index);
-  
-      // Update local state after successful delete
-      const updatedImages = localImages.filter((_, i) => i !== index);
-      setLocalImages(updatedImages);
+      await heroService.deleteHeroImage(heroId, imageToDelete);
+      setLocalImages((prev) => prev.filter((_, i) => i !== index));
+      setUpdatePending(true);
       toast.success("Image deleted successfully");
-    } catch (error) {
-      console.error("Failed to delete image:", error);
+    } catch {
       toast.error("Failed to delete image");
     }
-  };  
-
-  // ✅ Add this to track new file uploads
-  const handleFileInputChange = (e) => {
-    const files = Array.from(e.target.files);
-    setNewImages((prev) => [...prev, ...files]);
-    setUpdatePending(true); // allow update button to appear
   };
 
-  // Handle update (send modified image array to backend)
+  const handleFileInputChange = (e) => {
+    const files = Array.from(e.target.files);
+    if (files.length) {
+      setNewImages((prev) => [...prev, ...files]);
+      setUpdatePending(true);
+    }
+  };
+
   const handleUpdateImages = async () => {
     try {
       if (heroId) {
-        // Update existing hero section
         await heroService.updateHeroSection(heroId, {
           images: newImages,
           existingImages: localImages,
         });
         toast.success("Images updated successfully");
       } else {
-        // No hero section exists — create a new one
         const created = await heroService.createHeroSection({ images: newImages });
         toast.success("New hero section created");
-        setHeroId(created._id); // Save new ID
+        setHeroId(created._id);
       }
-  
-      // Refresh UI
+
+      resetFileInput();
       setNewImages([]);
       setUpdatePending(false);
       fetchHeroData();
-    } catch (error) {
+    } catch {
       toast.error("Update failed");
     }
-  };  
+  };
+
+  const handleClearAll = async () => {
+    if (!confirm("Are you sure you want to delete ALL hero section data?")) return;
+
+    try {
+      await heroService.clearAllHeroSections();
+      toast.success("All hero sections cleared");
+      setHeroData([]);
+      setLocalImages([]);
+      setHeroId(null);
+    } catch {
+      toast.error("Failed to clear hero sections");
+    }
+  };
 
   return (
     <div className="p-6 bg-white rounded shadow">
-      <div className="flex justify-between items-center mb-4">
-        <h6 className="text-lg font-semibold">All Images</h6>
-        <button
-          onClick={fetchHeroData}
-          className="flex items-center gap-2 text-sm px-3 py-1 bg-gray-200 rounded hover:bg-gray-300"
-        >
-          Refresh
-        </button>
-      </div>
+      <h6 className="text-lg font-semibold mb-4">All Images</h6>
 
-      {/* ✅ File Upload Input */}
+      {/* File Upload */}
       <div className="mb-4">
         <input
           type="file"
+          ref={fileInputRef}
           multiple
           accept="image/*"
           onChange={handleFileInputChange}
@@ -113,11 +124,11 @@ const HeroListing = () => {
         )}
       </div>
 
-      {/* ✅ Preview Existing Images */}
+      {/* Image Gallery */}
       {loading ? (
         <p>Loading...</p>
       ) : localImages.length === 0 ? (
-        <p>No hero images found.</p>
+        <p>No images found</p>
       ) : (
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
           {localImages.map((img, index) => (
@@ -144,36 +155,26 @@ const HeroListing = () => {
         </div>
       )}
 
-      {/* ✅ Update Button if something has changed */}
-      {updatePending && newImages.length > 0 &&  (
-        <div className="mt-6 flex justify-end">
-          <button
-            onClick={handleUpdateImages}
-            className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
-          >
-            Save
-          </button>
-        </div>
-      )}
-      <button
-  onClick={async () => {
-    if (confirm("Are you sure you want to delete ALL hero section data?")) {
-      try {
-        await heroService.clearAllHeroSections();
-        toast.success("All hero sections cleared");
-        setHeroData([]);         // Reset frontend state
-        setLocalImages([]);
-        setHeroId(null);
-      } catch (err) {
-        toast.error("Failed to clear hero sections");
-      }
-    }
-  }}
-  className="text-sm bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
->
-  Clear All
-</button>
-
+      {/* Actions */}
+      <div className="mt-6 flex justify-end gap-3">
+        <button
+          onClick={handleUpdateImages}
+          disabled={!hasChanges}
+          className={`px-4 py-2 rounded text-white ${
+            hasChanges
+              ? "bg-green-600 hover:bg-green-700"
+              : "bg-gray-400 cursor-not-allowed"
+          }`}
+        >
+          Save
+        </button>
+        <button
+          onClick={handleClearAll}
+          className="text-sm bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
+        >
+          Clear All
+        </button>
+      </div>
     </div>
   );
 };

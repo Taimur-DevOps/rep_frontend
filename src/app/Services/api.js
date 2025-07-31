@@ -343,53 +343,54 @@ export const heroService = {
   updateHeroSection: async (id, heroData) => {
     try {
       const formData = new FormData();
-  
-      // Add new uploaded images (optional)
+
+      // Add new uploaded images
       if (heroData.images && heroData.images.length > 0) {
         heroData.images.forEach((image) => {
           formData.append("images", image);
         });
       }
-  
-      // ✅ Send the preserved images
+
+      // Add existing images (preserved)
       if (heroData.existingImages && heroData.existingImages.length > 0) {
         formData.append("existingImages", JSON.stringify(heroData.existingImages));
       }
-  
+
       const response = await api.put(`/hero-section/${id}`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
       });
-  
+
       return response.data;
     } catch (error) {
       throw error.response?.data || error.message;
     }
-  },  
+  },
 
-// Delete entire hero section
-// Delete specific image by index
-deleteHeroImage: async (heroId, imageIndex) => {
-  try {
-    const response = await api.delete(`/hero-section/${heroId}/images/${imageIndex}`);
-    return response.data;
-  } catch (error) {
-    throw error.response?.data || error.message;
+  // Delete a specific image from a section
+  deleteHeroImage: async (sectionId, imagePath) => {
+    try {
+      const response = await api.patch("/hero-section/remove-image", {
+        sectionId,
+        imagePath,
+      });
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || error.message;
+    }
+  },
+
+  // Delete all hero sections
+  clearAllHeroSections: async () => {
+    try {
+      const response = await api.delete("/hero-section");
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || error.message;
+    }
   }
-},
-
-// Delete all hero sections
-clearAllHeroSections: async () => {
-  try {
-    const response = await api.delete("/hero-section");
-    return response.data;
-  } catch (error) {
-    throw error.response?.data || error.message;
-  }
-}
-
-}
+};
 
 // For backward compatibility
 export const propertyAPI = propertyService;
