@@ -142,8 +142,7 @@ const AdminListingForm = ({ propertyId }) => {
 
     if (totalImages > 30) {
       setError(
-        `You can upload a maximum of 30 images. You already have ${existingImageCount} and selected ${
-          formik.values.images.length + files.length
+        `You can upload a maximum of 30 images. You already have ${existingImageCount} and selected ${formik.values.images.length + files.length
         }`
       );
       return;
@@ -206,6 +205,18 @@ const AdminListingForm = ({ propertyId }) => {
                 { value: "marla10", label: "10 Marla" },
                 { value: "marla15", label: "15 Marla" },
                 { value: "marla20", label: "20 Marla" },
+                { value: "marla25", label: "25 Marla" },
+                { value: "marla30", label: "30 Marla" },
+                { value: "marla35", label: "35 Marla" },
+                { value: "marla40", label: "40 Marla" },
+                { value: "marla45", label: "45 Marla" },
+                { value: "marla50", label: "50 Marla" },
+                { value: "marla55", label: "55 Marla" },
+                { value: "marla60", label: "60 Marla" },
+                { value: "marla65", label: "65 Marla" },
+                { value: "marla70", label: "70 Marla" },
+                { value: "marla75", label: "75 Marla" },
+                { value: "marla80", label: "80 Marla" },
               ]}
             />
           </div>
@@ -291,9 +302,8 @@ const AdminListingForm = ({ propertyId }) => {
             <button
               type="submit"
               disabled={isLoading}
-              className={`mt-4 py-2 px-5 bg-green-500 text-white rounded-[4px] text-base leading-4 ${
-                isLoading ? "opacity-50 cursor-not-allowed" : ""
-              }`}
+              className={`mt-4 py-2 px-5 bg-green-500 text-white rounded-[4px] text-base leading-4 ${isLoading ? "opacity-50 cursor-not-allowed" : ""
+                }`}
             >
               {isLoading ? "Saving..." : isEdit ? "Update" : "Save"}
             </button>

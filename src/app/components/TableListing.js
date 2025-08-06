@@ -99,7 +99,7 @@ const TableListing = ({ onEdit, onAddNew }) => {
   }
 
   return (
-    <div className="container mx-auto">
+    <div className=" mx-auto">
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl font-bold text-gray-800">Properties</h2>
         <button
@@ -139,10 +139,13 @@ const TableListing = ({ onEdit, onAddNew }) => {
                     Price
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Fixed Price
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Type
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Feature
+                    Featured
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Bedrooms
@@ -168,7 +171,10 @@ const TableListing = ({ onEdit, onAddNew }) => {
                       {property.location}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      ${property.price?.toLocaleString() || "N/A"}
+                      {property.price?.toLocaleString() || "N/A"}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      {property.fixedPrice?.toLocaleString() || "N/A"}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                       {property.propertyType}
