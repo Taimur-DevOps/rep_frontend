@@ -35,19 +35,21 @@ export const propertyService = {
         page: page.toString(),
         limit: limit.toString(),
       });
-
+  
       const response = await fetch(
-        `/api/properties/search/paginated?${queryParams}`
+        `/api/properties/search/paginated?${queryParams.toString()}`
       );
+  
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
+  
       return await response.json();
     } catch (error) {
       console.error("Error searching paginated properties:", error);
       throw error;
     }
-  },
+  },  
 
   // Get all properties
   getAllProperties: async () => {

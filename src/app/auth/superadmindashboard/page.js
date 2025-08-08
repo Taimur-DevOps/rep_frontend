@@ -146,7 +146,7 @@ const Dashboard = () => {
 
       {/* Sidebar */}
     <div className="flex min-h-screen">
-      <div className="relative flex flex-col bg-clip-border rounded-xl bg-white text-gray-700 w-full max-w-[20rem] p-4 shadow-xl shadow-blue-gray-900/5">
+      <div className="w-1/5 relative flex flex-col bg-clip-border rounded-xl bg-white text-gray-700 p-4 shadow-xl shadow-blue-gray-900/5">
         <nav className="flex flex-col gap-1 min-w-[240px] p-2 font-sans text-base font-normal text-gray-700">
           {/* Property Main Menu with Submenu */}
           <div>
@@ -344,7 +344,7 @@ const Dashboard = () => {
       </div>
 
       {/* Main Content */}
-      <div className="w-full">
+      <div className="w-4/5">
         {/* Dashboard Stats */}
         <div className="p-6">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
