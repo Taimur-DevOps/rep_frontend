@@ -26,11 +26,9 @@ const Footer = () => {
                   </span>
                 </a>
                 <p className="text-white text-sm leading-[25px] font-light py-5">
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                  Vestibulum at fermentum felis. Phasellus eget vehicula sem.
-                  Duis malesuada sapien nec quam gravida accumsan.
+                Based in DHA Lahore, we specialize in building and selling premium homes, apartments, farmhouses, and plots. Every listing we share is genuine, with verified owners and real prices—because we believe trust is the foundation of every deal.
                 </p>
-                <div>Read more</div>
+           
               </div>
               <div className="lg:w-[25%] md:w-[25%]">
                 <h5 className="text-lg text-white mb-6 ml-1">Discover</h5>

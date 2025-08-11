@@ -6,6 +6,8 @@ import DhaPhases from "./components/DhaPhases";
 import Categories from "./components/Categories";
 import KeepInTouch from "./components/KeepInTouch";
 import FeaturedCarousel from "./components/FeaturedCarousel";
+import Services from "./components/Services";
+import Vision from "./components/Vision";
 
 export default function Home() {
   return (
@@ -14,8 +16,9 @@ export default function Home() {
       <Filters />
       <FeaturedCarousel />
       <Categories />
+      <Vision />
       {/* <Services /> */}
-      <AboutUsSection />
+      {/* <AboutUsSection /> */}
       <DhaPhases />
       <KeepInTouch />
     </>

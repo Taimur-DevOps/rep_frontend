@@ -38,8 +38,7 @@ const Categories = () => {
               Explore New Lifestyles
             </h2>
             <p className="text-base font-thin leading-7 mb-2">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-              Vestibulum at fermentum felis. Phasellus eget vehicula sem.
+            From chic city apartments to sprawling farmhouses, family homes, and prime plots—discover properties that match your lifestyle, dreams, and investment goals. Every listing is genuine, verified, and ready for you.
             </p>
             <div>
               <Button text="Discover" variant="primary" />

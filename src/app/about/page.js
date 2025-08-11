@@ -37,24 +37,18 @@ const About = () => {
       </div>
 
       <main className="lg:container mx-auto py-24 lg:px-0 px-5">
-        <h3 className="text-4xl font-bold font-nokara">Your Vision Unrestricted</h3>
+        <h3 className="text-4xl font-bold font-nokara">Welcome to Real Estate Partner</h3>
         <div className="flex lg:flex-row flex-col items-center gap-6 text-base font-nokara text-[#54595f] font-normal mt-8">
           <p className="flex flex-col gap-3">
             <span>
-              REP is a premium WordPress theme for real estate agents and agencies...
-            </span>
-            <span>
-              Whether you are a real estate agent looking to build a website...
-            </span>
-          </p>
-          <p className="-mt-5 flex flex-col gap-3">
-            <span>
-              REP is also a WordPress-based property management system...
-            </span>
-            <span>
-              Unlike many other real estate themes which confine you...
+              We’re not just another real estate company. We’re your dedicated partner in finding the right home in DHA Lahore—with honesty at the heart of everything we do.
+              While most realtors flood online platforms with fake listings just to chase leads, we’re building something better. At Real Estate Partner, Every property you see is 100% real—authentic photos, accurate prices, and verified details. And   <b className="font-bold text-lg text-black"> Every deal we make is directly with the real owner—no middlemen, no false claims. </b>
+                Our process is simple but smart. We invite you to our office, where you can explore our full printed catalog, browse live listings on our custom-built website, and let our expert team help you shortlist the best homes for your needs. Once we understand your preferences, we personally guide you through hand-picked property visits—no pressure, no chaos.
+                We don’t just deal in property—we build homes, relationships, and trust.
+                Real Estate Partner — Real People. Real Listings. Real Homes.
             </span>
           </p>
+
         </div>
       </main>
 
@@ -71,13 +65,13 @@ const About = () => {
             {teamMembers.map((member, index) => (
               <div key={index} className="teamMember1 relative">
                 <div>
-                <Image
-                  alt={member.name}
-                  src={`${BASE_API_URL}${member.images[0]}`}
-                  width={300}
-                  height={300}
-                  className="object-cover w-full h-[365px]"
-                />
+                  <Image
+                    alt={member.name}
+                    src={`${BASE_API_URL}${member.images[0]}`}
+                    width={300}
+                    height={300}
+                    className="object-cover w-full h-[365px]"
+                  />
                   <div className="card">
                     <span className="font-semibold">{member.name}</span>
                     <span>{member.role}</span>
