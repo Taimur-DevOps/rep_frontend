@@ -33,7 +33,7 @@ const InputFiled = ({ name, label, type }) => {
         name={name}
         value={field.value}
         onChange={field.onChange}
-        className="w-full px-2 border border-gray-300 rounded-[4px]"
+        className="w-full px-2 py-1  border border-gray-300 rounded-[4px]"
       />
       {meta.error && meta.touched && (
         <div className="text-red-500 text-sm">{meta.error} </div>
@@ -113,7 +113,7 @@ const InputNumber = ({ name, label, type }) => {
         name={name}
         value={field.value}
         onChange={field.onChange}
-        className="w-full px-2 border border-gray-300 rounded-[4px]"
+        className="w-full px-2 py-1  border border-gray-300 rounded-[4px]"
       />
       {meta.error && meta.touched && (
         <div className="text-red-500 text-sm">{meta.error}</div>
@@ -148,7 +148,7 @@ const SelectField = ({ label, options, ...props }) => {
       <select
         {...field}
         {...props}
-        className="w-full border border-gray-300 rounded-[4px] bg-white px-2 placeholder:font-light"
+        className="w-full border border-gray-300 rounded-[4px] bg-white px-2 py-1  placeholder:font-light"
       >
         <option value="">Select {label}</option>
         {options.map((option) => (
@@ -192,7 +192,7 @@ const SelectField = ({ label, options, ...props }) => {
 //             type="text"
 //             value={field.value[index]}
 //             onChange={(e) => handleFeatureChange(index, e.target.value)}
-//             className="w-full px-2 border border-gray-300 rounded-[4px]"
+//             className="w-full px-2 py-1  border border-gray-300 rounded-[4px]"
 //           />
 //           <button
 //             type="button"
