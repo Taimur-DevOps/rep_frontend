@@ -10,9 +10,6 @@ const Settings = () => {
         Hero section 
       </h1>
       <main className=" flex flex-row gap-7 mb-7">
-        {/* <div className="w-2/5">
-          <HeroFormAdmin />
-        </div> */}
         <div className="w-full">
           <HeroListing />
         </div>

@@ -8,7 +8,7 @@ import Link from "next/link";
 import React, { useState, useEffect } from "react";
 
 const Dashboard = () => {
-  const [activeTab, setActiveTab] = useState("create");
+  const [activeTab, setActiveTab] = useState("listing");
   const [isPropertySubmenuOpen, setIsPropertySubmenuOpen] = useState(true);
   const [isTeamSubmenuOpen, setIsTeamSubmenuOpen] = useState(false);
   const [selectedPropertyId, setSelectedPropertyId] = useState(null);

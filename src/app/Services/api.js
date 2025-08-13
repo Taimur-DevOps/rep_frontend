@@ -105,13 +105,22 @@ export const propertyService = {
   },
 };
 
-
 // User APIs
 export const userService = {
   // Get all users
   getAllUsers: async () => {
     try {
       const response = await api.get("/users");
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || error.message;
+    }
+  },
+
+  // Get paginated users
+  getUsersPaginated: async (page = 1, limit = 10) => {
+    try {
+      const response = await api.get(`/users/paginated?page=${page}&limit=${limit}`);
       return response.data;
     } catch (error) {
       throw error.response?.data || error.message;
@@ -131,31 +140,30 @@ export const userService = {
   // Create user
   createUser: async (userData) => {
     try {
-      // Create FormData for file uploads
       const formData = new FormData();
 
-      // Add all text fields to formData
+      // Append text fields (skills converted to JSON string if array)
       Object.keys(userData).forEach((key) => {
-        if (key === "images") {
-          // Skip images here, we'll handle them separately
-          return;
-        } else {
-          formData.append(key, userData[key]);
+        if (key !== "images") {
+          if (key === "skills" && Array.isArray(userData[key])) {
+            formData.append(key, JSON.stringify(userData[key]));
+          } else {
+            formData.append(key, userData[key]);
+          }
         }
       });
 
-      // Add images to formData
-      if (userData.images && userData.images.length > 0) {
+      // Append images
+      if (userData.images?.length) {
         userData.images.forEach((image) => {
           formData.append("images", image);
         });
       }
 
       const response = await api.post("/users", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
+        headers: { "Content-Type": "multipart/form-data" },
       });
+
       return response.data;
     } catch (error) {
       throw error.response?.data || error.message;
@@ -165,21 +173,21 @@ export const userService = {
   // Update user
   updateUser: async (id, userData) => {
     try {
-      // Create FormData for file uploads
       const formData = new FormData();
 
-      // Add all text fields to formData
+      // Append text fields (skills converted to JSON string if array)
       Object.keys(userData).forEach((key) => {
-        if (key === "images") {
-          // Skip images here, we'll handle them separately
-          return;
-        } else {
-          formData.append(key, userData[key]);
+        if (key !== "images") {
+          if (key === "skills" && Array.isArray(userData[key])) {
+            formData.append(key, JSON.stringify(userData[key]));
+          } else {
+            formData.append(key, userData[key]);
+          }
         }
       });
 
-      // Add images to formData
-      if (userData.images && userData.images.length > 0) {
+      // Append only new image files (skip existing URLs)
+      if (userData.images?.length) {
         userData.images.forEach((image) => {
           if (image instanceof File) {
             formData.append("images", image);
@@ -188,10 +196,9 @@ export const userService = {
       }
 
       const response = await api.put(`/users/${id}`, formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
+        headers: { "Content-Type": "multipart/form-data" },
       });
+
       return response.data;
     } catch (error) {
       throw error.response?.data || error.message;
@@ -208,12 +215,21 @@ export const userService = {
     }
   },
 
-  // Delete user image
+  // Delete specific user image
   deleteUserImage: async (userId, imageIndex) => {
     try {
-      const response = await api.delete(
-        `/users/${userId}/images/${imageIndex}`
-      );
+      const response = await api.delete(`/users/${userId}/images/${imageIndex}`);
+      return response.data;
+    } catch (error) {
+      throw error.response?.data || error.message;
+    }
+  },
+
+  // Search users
+  searchUsers: async (queryParams) => {
+    try {
+      const query = new URLSearchParams(queryParams).toString();
+      const response = await api.get(`/users/search?${query}`);
       return response.data;
     } catch (error) {
       throw error.response?.data || error.message;
@@ -221,10 +237,9 @@ export const userService = {
   },
 };
 
-
 // Hero Section APIs 
 export const heroService = {
-  // Get all hero sections
+  // ✅ Get all hero sections
   getAllHeroSections: async () => {
     try {
       const response = await api.get("/hero-section");
@@ -234,7 +249,7 @@ export const heroService = {
     }
   },
 
-  // Create a new hero section (images only)
+  // ✅ Create a new hero section (images only)
   createHeroSection: async (heroData) => {
     try {
       const formData = new FormData();
@@ -246,9 +261,7 @@ export const heroService = {
       }
 
       const response = await api.post("/hero-section", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
+        headers: { "Content-Type": "multipart/form-data" },
       });
 
       return response.data;
@@ -257,27 +270,28 @@ export const heroService = {
     }
   },
 
-  // Update hero section images
+  // ✅ Update hero section images
   updateHeroSection: async (id, heroData) => {
     try {
       const formData = new FormData();
 
-      // Add new uploaded images
+      // New uploaded images
       if (heroData.images && heroData.images.length > 0) {
         heroData.images.forEach((image) => {
           formData.append("images", image);
         });
       }
 
-      // Add existing images (preserved)
+      // Preserved existing images
       if (heroData.existingImages && heroData.existingImages.length > 0) {
-        formData.append("existingImages", JSON.stringify(heroData.existingImages));
+        formData.append(
+          "existingImages",
+          JSON.stringify(heroData.existingImages)
+        );
       }
 
       const response = await api.put(`/hero-section/${id}`, formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
+        headers: { "Content-Type": "multipart/form-data" },
       });
 
       return response.data;
@@ -286,12 +300,12 @@ export const heroService = {
     }
   },
 
-  // Delete a specific image from a section
-  deleteHeroImage: async (sectionId, imagePath) => {
+  // ✅ Delete a specific image from a section (Cloudinary version)
+  deleteHeroImage: async (sectionId, imageUrl) => {
     try {
       const response = await api.patch("/hero-section/remove-image", {
         sectionId,
-        imagePath,
+        imageUrl, // full Cloudinary URL now
       });
       return response.data;
     } catch (error) {
@@ -299,7 +313,7 @@ export const heroService = {
     }
   },
 
-  // Delete all hero sections
+  // ✅ Delete all hero sections
   clearAllHeroSections: async () => {
     try {
       const response = await api.delete("/hero-section");

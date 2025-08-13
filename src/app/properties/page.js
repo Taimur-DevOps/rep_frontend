@@ -32,7 +32,6 @@ const properties = () => {
 
   return (
     <>
-      <Banner />
       <Filters />
       <section className="bg-bgGray">
         <div className="container mx-auto py-12 lg:px-0 px-7">

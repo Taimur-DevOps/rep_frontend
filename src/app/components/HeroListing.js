@@ -1,9 +1,8 @@
-import { useEffect, useRef, useState, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
+import Image from "next/image";
+import { RxCross2 } from "react-icons/rx";
 import { toast } from "react-toastify";
 import { heroService } from "../Services/api";
-import Image from "next/image";
-import BASE_API_URL from "@/config";
-import { RxCross2 } from "react-icons/rx";
 
 const HeroListing = () => {
   const [heroData, setHeroData] = useState([]);
@@ -27,7 +26,7 @@ const HeroListing = () => {
       if (data.length) {
         setHeroData(data);
         setHeroId(data[0]._id);
-        setLocalImages(data[0].images);
+        setLocalImages(data[0].images || []);
       } else {
         setHeroData([]);
         setHeroId(null);
@@ -49,7 +48,8 @@ const HeroListing = () => {
     if (!heroId || !imageToDelete) return;
 
     try {
-      await heroService.deleteHeroImage(heroId, imageToDelete);
+      await heroService.deleteHeroImage(heroId, imageToDelete); 
+      // imageToDelete is full Cloudinary URL
       setLocalImages((prev) => prev.filter((_, i) => i !== index));
       setUpdatePending(true);
       toast.success("Image deleted successfully");
@@ -137,7 +137,7 @@ const HeroListing = () => {
               className="relative border rounded overflow-hidden shadow-sm"
             >
               <Image
-                src={`${BASE_API_URL}${img}`}
+                src={img} // now directly uses Cloudinary URL
                 alt={`Hero ${index}`}
                 width={300}
                 height={300}
@@ -166,7 +166,7 @@ const HeroListing = () => {
               : "bg-gray-400 cursor-not-allowed"
           }`}
         >
-          Savess
+          Save
         </button>
         <button
           onClick={handleClearAll}

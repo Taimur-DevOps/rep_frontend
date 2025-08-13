@@ -196,20 +196,18 @@ const TeamList = () => {
                   </svg>
                 </button>
               </div>
-
               {member.images && member.images.length > 0 && (
-  <div className="flex gap-2 mb-4">
-    {member.images.map((imgSrc, index) => (
-      <img
-        key={index}
-        src={`http://localhost:5001${imgSrc}`}
-        alt={`${member.name} ${index}`}
-        className="w-16 h-16 rounded-full object-cover border"
-      />
-    ))}
-  </div>
-)}
-
+                  <div className="flex gap-2 mb-4">
+                    {member.images.map((imgObj, index) => (
+                      <img
+                        key={index}
+                        src={imgObj.url}
+                        alt={`${member.name} ${index}`}
+                        className="w-16 h-16 rounded-full object-cover border"
+                      />
+                    ))}
+                  </div>
+                )}
               {/* Contact Information */}
               <div className="space-y-2 text-sm text-gray-600">
                 {member.email && (

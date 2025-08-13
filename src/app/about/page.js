@@ -65,13 +65,13 @@ const About = () => {
             {teamMembers.map((member, index) => (
               <div key={index} className="teamMember1 relative">
                 <div>
-                  <Image
-                    alt={member.name}
-                    src={`${BASE_API_URL}${member.images[0]}`}
-                    width={300}
-                    height={300}
-                    className="object-cover w-full h-[365px]"
-                  />
+                    <Image
+                      alt={member.name}
+                      src={member.images[0]?.url}
+                      width={300}
+                      height={300}
+                      className="object-cover w-full h-[365px]"
+                    />
                   <div className="card">
                     <span className="font-semibold">{member.name}</span>
                     <span>{member.role}</span>

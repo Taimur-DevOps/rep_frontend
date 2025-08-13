@@ -8,7 +8,6 @@ import { Navigation, Autoplay } from "swiper/modules";
 import Button from "./Button";
 import { heroService } from "../Services/api";
 import { toast } from "react-hot-toast";
-import BASE_API_URL from "@/config";
 
 const Banner = () => {
   const [bannerImages, setBannerImages] = useState([]);
@@ -24,9 +23,10 @@ const Banner = () => {
       setIsLoading(true);
       const heroData = await heroService.getAllHeroSections();
 
+      // Directly use Cloudinary URLs stored in DB
       const images = heroData
         .filter((item) => Array.isArray(item.images) && item.images.length > 0)
-        .flatMap((item) => item.images.map((imgPath) => `${BASE_API_URL}${imgPath}`));
+        .flatMap((item) => item.images);
 
       if (!images.length) {
         toast.error("No hero banner images found.");
@@ -45,14 +45,8 @@ const Banner = () => {
   };
 
   const breakpoints = {
-    767: {
-      slidesPerView: 1,
-      spaceBetween: 20,
-    },
-    1024: {
-      slidesPerView: 1,
-      spaceBetween: 20,
-    },
+    767: { slidesPerView: 1, spaceBetween: 20 },
+    1024: { slidesPerView: 1, spaceBetween: 20 },
   };
 
   if (isLoading) {
@@ -88,7 +82,6 @@ const Banner = () => {
                   <p>Image not available</p>
                 </div>
               )}
-
               {/* Optional overlay info */}
               {/* <div className="absolute lg:left-[12%] md:left-[12%] lg:w-[500px] lg:h-[170px] md:w-[375px] w-[300px] md:h-auto bg-gray-50 text-black py-6 px-[30px] rounded-[4px]">
                 <div className="flex flex-col gap-1">
