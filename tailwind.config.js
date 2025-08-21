@@ -21,6 +21,7 @@ module.exports = {
         lightGray: "#495057",
         bgGray: "#f8f8f8",
         lightPeach: "#fa8f8d",
+        hoverBtn: "#fa8f8de0",
         iconClr: "#636363",
       },
       container: {

@@ -1,76 +1,173 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import Button from "./Button";
 import { CiSearch } from "react-icons/ci";
-import FilterDropdown from "./FilterDropdown";
+import { RxReset } from "react-icons/rx";
 
-const Filters = () => {
+const Filters = ({ onSearch }) => {
+  const [filters, setFilters] = useState({
+    location: "",
+    propertyType: "",
+    bedrooms: "",
+    bathrooms: "",
+    minPrice: "",
+    maxPrice: "",
+  });
+
+  const handleChange = (e) => {
+    let { name, value } = e.target;
+  
+    if (name === "minPrice" && value < 0) {
+      value = Math.abs(value); // turn -1 into 1 instantly
+    }
+  
+    setFilters({
+      ...filters,
+      [name]: value,
+    });
+  };
+  
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (onSearch) {
+      onSearch(filters);
+    }
+  };
+
   return (
-    <form className="lg:container mx-auto py-7 lg:px-0 px-5">
-      <div className="flex flex-col gap-4">
-        {/* Search Bar */}
-        <div className="flex flex-col lg:flex-row md:flex-row gap-2 lg:items-center">
-          <label className="lg:w-[60%] w-full flex items-center gap-2 border border-gray-300 rounded-md py-2 px-3 bg-white">
-            <CiSearch className="text-gray-500" />
-            <input
-              type="text"
-              placeholder="Enter Keyword (e.g. city, area)..."
-              className="w-full outline-none bg-transparent text-gray-700 placeholder-gray-500"
-            />
-          </label>
-          <div className="lg:w-[20%] w-full">
-            <FilterDropdown label="Location" options={["New York", "Los Angeles", "Chicago"]} />
-          </div>
-          <div className="lg:w-[20%] w-full">
-            <Button text="Search" variant="primary" className="w-full" />
-          </div>
+    <form
+    onSubmit={handleSubmit}
+    className="lg:container mx-auto py-7 lg:px-0 px-5"
+  >
+    <div className="flex flex-col gap-4">
+      {/* Search Bar */}
+      <div className="grid grid-cols-12 gap-2 items-center">
+        
+        {/* Location (wider) */}
+        <label className="col-span-12 md:col-span-3 flex items-center gap-2 border border-gray-300 rounded-md py-2 px-3 bg-white">
+          <input
+            type="text"
+            name="location"
+            value={filters.location}
+            onChange={handleChange}
+            placeholder="Enter location..."
+            className="w-full outline-none bg-transparent text-gray-700 placeholder-gray-500"
+          />
+        </label>
+  
+        {/* Property Type (wider than others) */}
+        <div className="col-span-12 md:col-span-2 border border-gray-300 rounded-md bg-white">
+          <select
+            name="propertyType"
+            value={filters.propertyType}
+            onChange={handleChange}
+            className="w-full outline-none bg-transparent text-gray-700 py-2 px-3"
+          >
+            <option value="">Property Type</option>
+            <option value="Home">Home</option>
+            <option value="Apartment">Apartment</option>
+            <option value="Villa">Villa</option>
+            <option value="Loft">Loft</option>
+            <option value="Farmhouse">Farmhouse</option>
+          </select>
         </div>
-
-        {/* Filter Fields */}
-        <div className="grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-3">
-          <FilterDropdown label="Property Type" options={["House", "Apartment", "Condo", "Villa", "Commercial"]} />
-          <FilterDropdown label="Bedrooms" options={["1", "2", "3", "4+"]} />
-          <FilterDropdown label="Bathrooms" options={["1", "2", "3", "4+"]} />
-          <FilterDropdown label="Basement" options={["Yes", "No"]} />
+  
+        {/* Beds */}
+        <div className="col-span-6 md:col-span-1 border border-gray-300 rounded-md py-2 px-3 bg-white">
+          <input
+            type="number"
+            name="bedrooms"
+            value={filters.bedrooms}
+            onChange={handleChange}
+            placeholder="Beds"
+            className="w-full outline-none bg-transparent text-gray-700"
+          />
         </div>
-
-        {/* Price and Area Filters */}
-        <div className="grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-3">
-          <FilterDropdown label="Swimming Pool" options={["Yes", "No"]} />
-          {/* <div className="border border-gray-300 rounded-md py-2 px-3 bg-white">
-            <label className="text-gray-600 text-sm">Min Price</label>
-            <input
-              type="number"
-              placeholder="0"
-              className="w-full outline-none bg-transparent text-gray-700"
-            />
-          </div>
-          <div className="border border-gray-300 rounded-md py-2 px-3 bg-white">
-            <label className="text-gray-600 text-sm">Max Price</label>
-            <input
-              type="number"
-              placeholder="500,000"
-              className="w-full outline-none bg-transparent text-gray-700"
-            />
-          </div> */}
-          <FilterDropdown label="Area Size (sq ft)" options={["500", "1000", "2000", "5000+"]} />
+  
+        {/* Baths */}
+        <div className="col-span-6 md:col-span-1 border border-gray-300 rounded-md py-2 px-3 bg-white">
+          <input
+            type="number"
+            name="bathrooms"
+            value={filters.bathrooms}
+            onChange={handleChange}
+            placeholder="Baths"
+            className="w-full outline-none bg-transparent text-gray-700"
+          />
         </div>
-
-        {/* Search Button for Mobile */}
-        <div className="lg:hidden block w-full">
-          <Button text="Search" variant="primary" className="w-full" />
+  
+        {/* Min Price */}
+        <div className="col-span-6 md:col-span-2 border border-gray-300 rounded-md py-2 px-3 bg-white">
+          <input
+            type="number"
+            name="minPrice"
+            value={filters.minPrice}
+            onChange={handleChange}
+            placeholder="Min Price"
+            className="w-full outline-none bg-transparent text-gray-700"
+          />
+        </div>
+  
+        {/* Max Price */}
+        <div className="col-span-6 md:col-span-2 border border-gray-300 rounded-md py-2 px-3 bg-white">
+          <input
+            type="number"
+            name="maxPrice"
+            value={filters.maxPrice}
+            onChange={handleChange}
+            placeholder="Max Price"
+            className="w-full outline-none bg-transparent text-gray-700"
+          />
+        </div>
+  
+        {/* Action Buttons */}
+        <div className="hidden md:flex col-span-12 md:col-span-1 gap-2 justify-end">
+          {/* Search Button */}
+          <button
+            type="submit"
+            className="flex items-center justify-center w-12 h-12 rounded-md bg-lightPeach text-white hover:bg-hoverBtn"
+          >
+            <CiSearch className="w-6 h-6" />
+          </button>
+  
+          {/* Reset Button */}
+          <button
+            type="button"
+            className="flex items-center justify-center w-12 h-12 rounded-md bg-gray-200 text-gray-700 hover:bg-gray-300"
+            onClick={() => {
+              setFilters({
+                location: "",
+                propertyType: "",
+                bedrooms: "",
+                bathrooms: "",
+                minPrice: "",
+                maxPrice: "",
+              });
+              if (onSearch) onSearch({});
+            }}
+          >
+            <RxReset className="w-6 h-6" />
+          </button>
         </div>
       </div>
-    </form>
+  
+      {/* Mobile Search Button */}
+      <div className="md:hidden block w-full">
+        <Button
+          type="submit"
+          text="Search"
+          variant="primary"
+          className="w-full bg-lightPeach text-white hover:bg-hoverBtn"
+        />
+      </div>
+    </div>
+  </form>  
   );
 };
 
 export default Filters;
-
-
-
-
+//   <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-3">
 
 // const [selectedLocation, setSelectedLocation] = useState("");
 // const [selectedPropertyType, setSelectedPropertyType] = useState("");

@@ -13,7 +13,6 @@ export default function Home() {
   return (
     <>
       <Banner />
-      <Filters />
       <FeaturedCarousel />
       <Categories />
       <Vision />
