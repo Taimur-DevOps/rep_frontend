@@ -40,11 +40,11 @@ const DetailPage = () => {
     if (id) fetchProperty();
   }, [id]);
 
-  // ✅ Don't render anything until property is loaded
+  // Don't render anything until property is loaded
   if (loading) return <p className='px-24'>Loading...</p>;
   if (!property) return <p>Property not found.</p>;
 
-  // ✅ Now it's safe to destructure
+  // Now it's safe to destructure
   const {
     title,
     price,

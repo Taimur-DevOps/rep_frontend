@@ -99,6 +99,16 @@ export const propertyService = {
     return response.data;
   },
 
+  getPropertiesByType: async () => {
+    const response = await api.get("/properties/types");
+    return response.data;
+  },
+  
+  getPropertiesByPhase: async () => {
+    const response = await api.get("/properties/phases");
+    return response.data;
+  },  
+
 };
 
 // User APIs
