@@ -99,10 +99,6 @@ export const propertyService = {
     return response.data;
   },
 
-  searchProperties: async (params) => {
-    const response = await api.get("/properties/search", { params });
-    return response.data;
-  },
 };
 
 // User APIs

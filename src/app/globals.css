@@ -67,6 +67,7 @@
 }
 .propertyFeatured .featureSwiper {
   padding-top: 60px;
+  padding-bottom: 45px;
 }
 .propertyFeatured .featureSwiper .swiper-button-next {
   top: 28px !important;

@@ -65,11 +65,12 @@ const Filters = ({ onSearch }) => {
             className="w-full outline-none bg-transparent text-gray-700 py-2 px-3"
           >
             <option value="">Property Type</option>
-            <option value="Home">Home</option>
+            <option value="House">House</option>
             <option value="Apartment">Apartment</option>
             <option value="Villa">Villa</option>
             <option value="Loft">Loft</option>
             <option value="Farmhouse">Farmhouse</option>
+            <option value="commercial">Commercial</option>
           </select>
         </div>
   
@@ -126,7 +127,7 @@ const Filters = ({ onSearch }) => {
           {/* Search Button */}
           <button
             type="submit"
-            className="flex items-center justify-center w-12 h-12 rounded-md bg-lightPeach text-white hover:bg-hoverBtn"
+            className="flex items-center justify-center w-12 h-11 rounded-md bg-lightPeach text-white hover:bg-hoverBtn"
           >
             <CiSearch className="w-6 h-6" />
           </button>
@@ -134,7 +135,7 @@ const Filters = ({ onSearch }) => {
           {/* Reset Button */}
           <button
             type="button"
-            className="flex items-center justify-center w-12 h-12 rounded-md bg-gray-200 text-gray-700 hover:bg-gray-300"
+            className="flex items-center justify-center w-12 h-11 rounded-md bg-gray-200 text-gray-700 hover:bg-gray-300"
             onClick={() => {
               setFilters({
                 location: "",
