@@ -69,7 +69,7 @@ const Banner = () => {
 
         return (
           <SwiperSlide key={index}>
-            <div className="h-[600px] flex justify-center items-center relative">
+            <div className="lg:h-[600px] h-[400px] flex justify-center items-center relative">
               {!hasImageError ? (
                 <img
                   src={imgUrl}

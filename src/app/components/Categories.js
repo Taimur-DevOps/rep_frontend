@@ -84,21 +84,21 @@ const Categories = () => {
               {types.slice(0, 2).map((item, index) => (
                 <div
                   key={index}
-                  onClick={() => handleCategoryClick(item.type)} 
+                  onClick={() => handleCategoryClick(item?.type)} 
                   className={`relative rounded-[4px] cursor-pointer ${
                     index === 0 ? "h-[220px]" : "h-[280px]"
                   }`}
                 >
                   <Image
-                    alt={item.type}
-                    src={imageMap[item.type.toLowerCase()] || phase1}
+                    alt={item?.type}
+                    src={imageMap[item?.type?.toLowerCase()] || phase1}
                     className="rounded-[4px] w-full h-full object-cover"
                   />
                   <div className="absolute inset-0 bg-black opacity-[0.3] rounded-[4px]"></div>
                   <div className="absolute inset-0 text-white flex justify-between flex-col p-8">
                     <div className="flex flex-col">
-                      <span className="text-xs">{item.count} Properties</span>
-                      <span className="text-xl capitalize">{item.type}</span>
+                      <span className="text-xs">{item?.count} Properties</span>
+                      <span className="text-xl capitalize">{item?.type}</span>
                     </div>
                     <span className="text-xs uppercase flex justify-between items-center">
                       More Details <PiPlayLight className="w-4 h-4" />
@@ -113,21 +113,21 @@ const Categories = () => {
               {types.slice(2, 4).map((item, index) => (
                 <div
                   key={index}
-                  onClick={() => handleCategoryClick(item.type)} 
+                  onClick={() => handleCategoryClick(item?.type)} 
                   className={`relative rounded-[4px] cursor-pointer ${
                     index === 0 ? "h-[280px]" : "h-[220px]"
                   }`}
                 >
                   <Image
-                    alt={item.type}
-                    src={imageMap[item.type.toLowerCase()] || phase1}
+                    alt={item?.type}
+                    src={imageMap[item?.type?.toLowerCase()] || phase1}
                     className="rounded-[4px] w-full h-full object-cover"
                   />
                   <div className="absolute inset-0 bg-black opacity-[0.3] rounded-[4px]"></div>
                   <div className="absolute inset-0 text-white flex justify-between flex-col p-8">
                     <div className="flex flex-col">
-                      <span className="text-xs">{item.count} Properties</span>
-                      <span className="text-xl capitalize">{item.type}</span>
+                      <span className="text-xs">{item?.count} Properties</span>
+                      <span className="text-xl capitalize">{item?.type}</span>
                     </div>
                     <span className="text-xs uppercase flex justify-between items-center">
                       More Details <PiPlayLight className="w-4 h-4" />

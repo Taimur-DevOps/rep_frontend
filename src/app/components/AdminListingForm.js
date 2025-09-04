@@ -31,6 +31,7 @@ const AdminListingForm = ({ propertyId }) => {
     yearBuilt: "",
     featured: false,
     features: [""],
+    phase: '',
   };
 
   const validationSchema = Yup.object({
@@ -59,6 +60,7 @@ const AdminListingForm = ({ propertyId }) => {
       .required("Required")
       .positive("Must be positive")
       .integer("Must be an integer"),
+    phase: Yup.string().required("Required"),
   });
 
   const formik = useFormik({
@@ -184,7 +186,7 @@ const AdminListingForm = ({ propertyId }) => {
           </div>
 
           {/* property type and area */}
-          <div className="grid grid-cols-2 gap-5">
+          <div className="grid grid-cols-3 gap-5">
             <Field
               type="select"
               name="propertyType"
@@ -194,6 +196,22 @@ const AdminListingForm = ({ propertyId }) => {
                 { value: "apartment", label: "Apartment" },
                 { value: "farmhouse", label: "Farm House" },
                 { value: "commercial", label: "Commercial" },
+              ]}
+            />
+             <Field
+              type="select"
+              name="phase"
+              label="Phase"
+              options={[
+                { value: "phase1", label: "Phase 1" },
+                { value: "phase2", label: "Phase 2" },
+                { value: "phase3", label: "Phase 3" },
+                { value: "phase4", label: "Phase 4" },
+                { value: "phase5", label: "Phase 5" },
+                { value: "phase6", label: "Phase 6" },
+                { value: "phase7", label: "Phase 7" },
+                { value: "phase8", label: "Phase 8" },
+                { value: "phase9", label: "Phase 9" },
               ]}
             />
             <Field

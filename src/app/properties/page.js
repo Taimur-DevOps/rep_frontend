@@ -6,6 +6,7 @@ import Pagination from "../components/Pagination";
 import Breadcrumb from "../components/Breadcrumb";
 import SkeletonCard from "../components/SkeletonCard";
 import { propertyService } from "../Services/api";
+import { useSearchParams } from "next/navigation";
 
 const PropertiesPage = () => {
   const [loading, setLoading] = useState(false);
@@ -14,45 +15,71 @@ const PropertiesPage = () => {
   const [totalPages, setTotalPages] = useState(1);
   const [searchFilters, setSearchFilters] = useState(null);
 
-  const limit = 10; // 10 records per page
+  const limit = 10;
+  const searchParams = useSearchParams();
+  const category = searchParams.get("category"); // /properties?category=apartment
+  const phase = searchParams.get("phase");       // /properties?phase=phase1
 
+  // Set initial filter from URL on mount
   useEffect(() => {
-    if (searchFilters) {
-      fetchSearchProperties(searchFilters, currentPage);
+    if (category) {
+      setSearchFilters({ propertyType: category });
+      setCurrentPage(1);
+    } else if (phase) {
+      setSearchFilters({ phase });
+      setCurrentPage(1);
+    } else {
+      setSearchFilters(null);
+    }
+  }, [category, phase]);
+
+  // Fetch whenever page or filters change
+  useEffect(() => {
+    if (category || phase || searchFilters) {
+      fetchSearchProperties(
+        searchFilters ||
+          (category ? { propertyType: category } : { phase }),
+        currentPage
+      );
     } else {
       fetchPaginatedProperties(currentPage);
     }
-  }, [currentPage, searchFilters]);
+  }, [currentPage, searchFilters, category, phase]);
 
-  // Fetch paginated properties (default)
-const fetchPaginatedProperties = async (page = 1) => {
-  setLoading(true);
-  try {
-    const response = await propertyService.getPaginatedProperties(page, limit);
-    setProperties(response.properties || []); 
-    setTotalPages(response.pagination?.totalPages || 1);
-  } catch (error) {
-    console.error("Failed to fetch properties:", error);
-  } finally {
-    setLoading(false);
-  }
-};
+  // Fetch all properties
+  const fetchPaginatedProperties = async (page = 1) => {
+    setLoading(true);
+    try {
+      const response = await propertyService.getPaginatedProperties(page, limit);
+      setProperties(response.properties || []);
+      setTotalPages(response.pagination?.totalPages || 1);
+    } catch (error) {
+      console.error("Failed to fetch properties:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-// Fetch filtered properties with pagination
-const fetchSearchProperties = async (filters, page = 1) => {
-  setLoading(true);
-  try {
-    const response = await propertyService.searchPropertiesPaginated(filters, page, limit);
-    setProperties(response.properties || []);
-    setTotalPages(response.pagination?.totalPages || 1);
-  } catch (error) {
-    console.error("Failed to search properties:", error);
-  } finally {
-    setLoading(false);
-  }
-};
+  // Fetch filtered properties
+  const fetchSearchProperties = async (filters, page = 1) => {
+    if (!filters) return;
+    setLoading(true);
+    try {
+      const response = await propertyService.searchPropertiesPaginated(
+        filters,
+        page,
+        limit
+      );
+      setProperties(response.properties || []);
+      setTotalPages(response.pagination?.totalPages || 1);
+    } catch (error) {
+      console.error("Failed to search properties:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-  // Trigger search and reset to page 1
+  // Trigger search from filters UI
   const handleSearch = (filters) => {
     setSearchFilters(filters);
     setCurrentPage(1);
@@ -92,6 +119,5 @@ const fetchSearchProperties = async (filters, page = 1) => {
     </>
   );
 };
-
 
 export default PropertiesPage;

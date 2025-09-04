@@ -109,24 +109,24 @@ const DetailPage = () => {
                   </div>
                 )}
                 {activeTab === 'features' && (
-  <div id="features">
-    <h3 className="text-xl font-bold my-3">Features</h3>
-    <hr className="pb-5" />
-    {property.features && property.features.length > 0 ? (
-      <ul className="grid lg:grid-cols-3 md:grid-cols-3 gap-5">
-        {property.features.map((feature, index) => (
-          
-          <li key={index} className="flex items-center gap-2">
-            <PiCheckCircleLight className="w-5 h-5" />
-            {feature}
-          </li>
-        ))}
-      </ul>
-    ) : (
-      <p className="text-lightGray">No features listed for this property.</p>
-    )}
-  </div>
-)}
+                  <div id="features">
+                    <h3 className="text-xl font-bold my-3">Features</h3>
+                    <hr className="pb-5" />
+                    {property.features && property.features.length > 0 ? (
+                      <ul className="grid lg:grid-cols-3 md:grid-cols-3 gap-5">
+                        {property.features.map((feature, index) => (
+                          
+                          <li key={index} className="flex items-center gap-2">
+                            <PiCheckCircleLight className="w-5 h-5" />
+                            {feature}
+                          </li>
+                        ))}
+                      </ul>
+                    ) : (
+                      <p className="text-lightGray">No features listed for this property.</p>
+                    )}
+                  </div>
+                )}
                 {activeTab === 'details' && (
                   <div id="details">
                     <h3 className="text-xl font-bold my-3">Details</h3>
@@ -150,50 +150,50 @@ const DetailPage = () => {
           {/*  */}
             {/* overview */}
             <section className="bg-white mt-8 pb-8 px-8">
-  <div className="flex justify-between items-center">
-    <h3 className="text-xl font-bold lg:mt-5 lg:mb-8 my-5">Overview</h3>
-    <p className="text-base font-semibold text-lightGray flex items-center gap-1">
-      Property ID:<span className="font-normal"> {property.propertyId || 'N/A'}</span>
-    </p>
-  </div>
-  <hr className="pb-5" />
-  <div className="grid grid-cols-2 lg:grid-cols-6 md:grid-cols-3 items-center lg:gap-[3.5rem] gap-5">
-    <div className="flex flex-col text-base">
-      <span className="font-semibold capitalize">{property.propertyType || 'N/A'}</span>
-      <span className="font-normal text-lightGray">Property Type</span>
-    </div>
-    <div className="flex flex-col text-base">
-      <span className="font-semibold flex items-center gap-2">
-        <LuBedDouble className="w-[18px] h-[18px]" /> {property.bedrooms}
-      </span>
-      <span className="font-normal text-lightGray">Bedrooms</span>
-    </div>
-    <div className="flex flex-col text-base">
-      <span className="font-semibold flex items-center gap-2">
-        <PiShowerLight className="w-[18px] h-[18px]" /> {property.bathrooms}
-      </span>
-      <span className="font-normal text-lightGray">Bathrooms</span>
-    </div>
-    <div className="flex flex-col text-base">
-      <span className="font-semibold flex items-center gap-2">
-        <PiPoliceCarLight className="w-[18px] h-[18px]" /> {property.garage}
-      </span>
-      <span className="font-normal text-lightGray">Garage</span>
-    </div>
-    <div className="flex flex-col text-base">
-      <span className="font-semibold flex items-center gap-2">
-        <TfiRulerAlt2 className="w-[18px] h-[18px]" /> {property.areaSize.replace("marla", "")}
-      </span>
-      <span className="font-normal text-lightGray">Marla</span>
-    </div>
-    <div className="flex flex-col text-base">
-      <span className="font-semibold flex items-center gap-2">
-        <SlCalender className="w-[18px] h-[18px]" /> {property.yearBuilt}
-      </span>
-      <span className="font-normal text-lightGray">Year Built</span>
-    </div>
-  </div>
-</section>
+          <div className="flex justify-between items-center">
+            <h3 className="text-xl font-bold lg:mt-5 lg:mb-8 my-5">Overview</h3>
+            <p className="text-base font-semibold text-lightGray flex items-center gap-1">
+              Property ID:<span className="font-normal"> {property.propertyId || 'N/A'}</span>
+            </p>
+          </div>
+          <hr className="pb-5" />
+          <div className="grid grid-cols-2 lg:grid-cols-6 md:grid-cols-3 items-center lg:gap-[3.5rem] gap-5">
+            <div className="flex flex-col text-base">
+              <span className="font-semibold capitalize">{property.propertyType || 'N/A'}</span>
+              <span className="font-normal text-lightGray">Property Type</span>
+            </div>
+            <div className="flex flex-col text-base">
+              <span className="font-semibold flex items-center gap-2">
+                <LuBedDouble className="w-[18px] h-[18px]" /> {property.bedrooms}
+              </span>
+              <span className="font-normal text-lightGray">Bedrooms</span>
+            </div>
+            <div className="flex flex-col text-base">
+              <span className="font-semibold flex items-center gap-2">
+                <PiShowerLight className="w-[18px] h-[18px]" /> {property.bathrooms}
+              </span>
+              <span className="font-normal text-lightGray">Bathrooms</span>
+            </div>
+            <div className="flex flex-col text-base">
+              <span className="font-semibold flex items-center gap-2">
+                <PiPoliceCarLight className="w-[18px] h-[18px]" /> {property.garage}
+              </span>
+              <span className="font-normal text-lightGray">Garage</span>
+            </div>
+            <div className="flex flex-col text-base">
+              <span className="font-semibold flex items-center gap-2">
+                <TfiRulerAlt2 className="w-[18px] h-[18px]" /> {property.areaSize.replace("marla", "")}
+              </span>
+              <span className="font-normal text-lightGray">Marla</span>
+            </div>
+            <div className="flex flex-col text-base">
+              <span className="font-semibold flex items-center gap-2">
+                <SlCalender className="w-[18px] h-[18px]" /> {property.yearBuilt}
+              </span>
+              <span className="font-normal text-lightGray">Year Built</span>
+            </div>
+          </div>
+        </section>
 
         </div>
       </section>

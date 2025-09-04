@@ -14,7 +14,7 @@ const Vision = () => {
     return (
         <>
             <section className="bg-bgGray">
-                <div className="lg:container mx-auto py-24 lg:px-0 px-3">
+                <div className="lg:container mx-auto py-24 lg:px-0 px-4">
                     <div className="mb-20">
                         <h2 className="text-4xl font-bold font-nokara mb-6">
                         Vision Statement
