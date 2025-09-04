@@ -13,7 +13,7 @@ const Footer = () => {
     <>
       <section>
         <div className="bg-bg ">
-          <div className="lg:container mx-auto py-24 lg:px-0 px-5">
+          <div className="lg:py-24 lg:px-10 px-5 py-16">
             <div className="flex lg:gap-[50px] md:gap-[30px] gap-7 lg:flex-row md:flex-row flex-col">
               <div className="lg:w-[50%] md:w-[45%] text-white lg:pr-20">
                 {" "}

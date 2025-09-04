@@ -63,10 +63,10 @@ const DhaPhases = () => {
   };  
 
   return (
-    <div className="py-24 lg:px-40 px-7">
+    <div className="lg:py-24 lg:px-10 px-5 py-16">
       <div className="flex gap-7 lg:flex-row flex-col">
         {/* left block */}
-        <div className="flex flex-col gap-5 lg:w-3/12">
+        <div className="flex flex-col gap-5 lg:w-3/12 justify-center">
           <span className="ml-3">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -100,94 +100,61 @@ const DhaPhases = () => {
 
         {/* right grid */}
         <div className="lg:w-9/12">
-          <div className="flex lg:flex-row md:flex-row flex-col gap-10">
-            {/* first column */}
-            <div className="flex flex-col gap-10 lg:w-1/3">
-              {phases.slice(0, 2).map((item, index) => (
-                <div
-                  key={index}
-                  onClick={() => handlePhaseClick(item.phase)}
-                  className={`relative rounded-[4px] cursor-pointer ${
-                    index === 0 ? "h-[180px]" : "h-[240px]"
-                  }`}
-                >
-                 <Image
-                    alt={item?.phase}
-                    src={phaseImageMap[item?.phase] || phase1}
-                    className="rounded-[4px] w-full h-full object-cover"
-                  />
-                  <div className="absolute inset-0 bg-black opacity-[0.3] rounded-[4px]"></div>
-                  <div className="absolute inset-0 text-white flex justify-between flex-col p-8">
-                    <div className="flex flex-col">
-                      <span className="text-xs">{item?.count} Properties</span>
-                      <span className="text-xl">{formatPhaseLabel(item?.phase)}</span>
-                    </div>
-                    <span className="text-xs uppercase flex justify-between items-center">
-                      More Details <PiPlayLight className="w-4 h-4" />
-                    </span>
-                  </div>
-                </div>
-              ))}
-            </div>
+         
 
-            {/* second column */}
-            <div className="flex flex-col gap-10 lg:w-1/3">
-              {phases.slice(2, 4).map((item, index) => (
-                <div
-                  key={index}
-                  onClick={() => handlePhaseClick(item?.phase)}
-                  className={`relative rounded-[4px] cursor-pointer ${
-                    index === 0 ? "h-[240px]" : "h-[180px]"
-                  }`}
-                >
-                  <Image
-                      alt={item?.phase}
-                      src={phaseImageMap[item?.phase] || phase1}
-                      className="rounded-[4px] w-full h-full object-cover"
-                    />
-                  <div className="absolute inset-0 bg-black opacity-[0.3] rounded-[4px]"></div>
-                  <div className="absolute inset-0 text-white flex justify-between flex-col p-8">
-                    <div className="flex flex-col">
-                      <span className="text-xs">{item?.count} Properties</span>
-                      <span className="text-xl">{formatPhaseLabel(item?.phase)}</span>
-                    </div>
-                    <span className="text-xs uppercase flex justify-between items-center">
-                      More Details <PiPlayLight className="w-4 h-4" />
-                    </span>
-                  </div>
-                </div>
-              ))}
-            </div>
 
-            {/* third column */}
-            <div className="flex flex-col gap-10 lg:w-1/3">
-              {phases.slice(4, 6).map((item, index) => (
-                <div
-                  key={index}
-                  onClick={() => handlePhaseClick(item.phase)}
-                  className={`relative rounded-[4px] cursor-pointer ${
-                    index === 0 ? "h-[180px]" : "h-[240px]"
-                  }`}
-                >
-                  <Image
-                    alt={item?.phase}
-                    src={phaseImageMap[item?.phase] || phase1}
-                    className="rounded-[4px] w-full h-full object-cover"
-                  />
-                  <div className="absolute inset-0 bg-black opacity-[0.3] rounded-[4px]"></div>
-                  <div className="absolute inset-0 text-white flex justify-between flex-col p-8">
-                    <div className="flex flex-col">
-                      <span className="text-xs">{item?.count} Properties</span>
-                      <span className="text-xl">{formatPhaseLabel(item?.phase)}</span>
-                    </div>
-                    <span className="text-xs uppercase flex justify-between items-center">
-                      More Details <PiPlayLight className="w-4 h-4" />
-                    </span>
+  <div className="flex lg:flex-row md:flex-row flex-col gap-4">
+    {Array.from({ length: Math.ceil(phases.length / 2) }).map((_, colIndex) => {
+      const colItems = phases.slice(colIndex * 2, colIndex * 2 + 2);
+      const isLastCol = colIndex === Math.ceil(phases.length / 2) - 1;
+      const isEvenCol = colIndex % 2 === 0; // even = small->big, odd = big->small
+
+      return (
+        <div key={colIndex} className="flex flex-col gap-4 lg:w-1/3">
+          {colItems.map((item, index) => {
+            // Last column with single card → full height
+            const heightClass =
+              isLastCol && colItems.length === 1
+                ? "h-full"
+                : isEvenCol
+                ? index === 0
+                  ? "h-[180px]"
+                  : "h-[240px]"
+                : index === 0
+                ? "h-[240px]"
+                : "h-[180px]";
+
+            return (
+              <div
+                key={index}
+                onClick={() => handlePhaseClick(item?.phase)}
+                className={`relative rounded-[4px] cursor-pointer ${heightClass}`}
+              >
+                <Image
+                  alt={item?.phase}
+                  src={phaseImageMap[item?.phase] || phase1}
+                  className="rounded-[4px] w-full h-full object-cover"
+                />
+                <div className="absolute inset-0 bg-black opacity-[0.3] rounded-[4px]"></div>
+                <div className="absolute inset-0 text-white flex justify-between flex-col p-8">
+                  <div className="flex flex-col">
+                    <span className="text-xs">{item?.count} Properties</span>
+                    <span className="text-xl">{formatPhaseLabel(item?.phase)}</span>
                   </div>
+                  <span className="text-xs uppercase flex justify-between items-center">
+                    More Details <PiPlayLight className="w-4 h-4" />
+                  </span>
                 </div>
-              ))}
-            </div>
-          </div>
+              </div>
+            );
+          })}
+        </div>
+      );
+    })}
+  </div>
+
+
+       
         </div>
       </div>
     </div>

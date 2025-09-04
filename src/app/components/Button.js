@@ -20,7 +20,7 @@ export default function Button({
             ? `${
                 disabled
                   ? `cursor-not-allowed rounded-lg border bg-btnBg px-4 py-2 text-center text-base font-semibold text-[#898989] ${className}`
-                  : `text-center text-base text-white bg-green-500 rounded-[4px] font-nokara .nokora-regular py-2 px-9 hover:bg-green-400  ${className}`
+                  : `text-center text-base text-white bg-lightPeach rounded-[4px] font-nokara .nokora-regular py-2 px-9 hover:bg-hoverBtn  ${className}`
               }`
             : variant === "secondary"
             ? `${

@@ -38,7 +38,7 @@ const Filters = ({ onSearch }) => {
   return (
     <form
     onSubmit={handleSubmit}
-    className="lg:container mx-auto py-7 lg:px-0 px-5"
+    className="lg:py-7 lg:pl-10 lg:pr-60 px-5 py-6 filterShadow"
   >
     <div className="flex flex-col gap-4">
       {/* Search Bar */}

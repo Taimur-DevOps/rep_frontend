@@ -6,7 +6,7 @@ function App() {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <nav className="lg:container mx-auto flex justify-between items-center lg:py-[30px] py-5 lg:px-0 px-4">
+    <nav className="flex justify-between items-center lg:py-[30px] py-5 lg:px-10 px-5">
       <a href="/" className="flex items-center space-x-3 rtl:space-x-reverse">
         <span className="self-center text-3xl font-bold whitespace-nowrap ">
           REP

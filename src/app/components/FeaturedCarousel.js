@@ -48,10 +48,10 @@ const FeaturedCarousel = () => {
 
   return (
     <section className="bg-bgGray propertyFeatured">
-      <div className="mx-auto lg:container py-24 lg:px-0 px-7">
-        <div className="mb-5">
-          <h3 className="text-4xl font-bold font-nokara">Featured Properties</h3>
-          <p className="text-base font-thin leading-7 mt-2">
+      <div className="lg:py-24 lg:px-10 px-5 py-16">
+        <div className="mb-5 text-center">
+          <h3 className="lg:text-4xl text-3xl font-bold font-nokara">Featured Properties</h3>
+          <p className="text-base font-thin leading-7 mt-2 lg:px-32">
             Discover the most sought-after homes in DHA Lahore—handpicked for
             their prime location, value, and demand. Every listing is 100% genuine,
             with real photos, verified owners, and accurate prices.

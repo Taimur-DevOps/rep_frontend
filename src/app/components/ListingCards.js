@@ -13,7 +13,7 @@ import { Pagination } from "swiper/modules";
 
 const ListingCards = ({ properties }) => {
   return (
-    <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-[30px]">
+    <div className="grid lg:grid-cols-4 md:grid-cols-2 grid-cols-1 gap-[20px]">
       {properties.map((property) => {
         const {
           _id,

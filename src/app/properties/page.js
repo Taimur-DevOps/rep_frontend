@@ -15,7 +15,7 @@ const PropertiesPage = () => {
   const [totalPages, setTotalPages] = useState(1);
   const [searchFilters, setSearchFilters] = useState(null);
 
-  const limit = 10;
+  const limit = 12;
   const searchParams = useSearchParams();
   const category = searchParams.get("category"); // /properties?category=apartment
   const phase = searchParams.get("phase");       // /properties?phase=phase1
@@ -89,7 +89,7 @@ const PropertiesPage = () => {
     <>
       <Filters onSearch={handleSearch} />
       <section className="bg-bgGray">
-        <div className="container mx-auto py-12 lg:px-0 px-7">
+        <div className="lg:py-12 lg:px-10 px-5 py-16">
           <Breadcrumb />
           <h3 className="text-4xl font-bold font-nokara mb-[30px] mt-3">
             Properties

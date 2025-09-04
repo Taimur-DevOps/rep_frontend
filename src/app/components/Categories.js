@@ -41,10 +41,10 @@ const Categories = () => {
   };
 
   return (
-    <div className="lg:container mx-auto py-24 lg:px-0 px-7">
+    <div className="lg:py-24 lg:px-10 px-5 py-16">
       <div className="flex gap-[3.7rem] lg:flex-row flex-col">
         {/* left block */}
-        <div className="flex flex-col gap-5 lg:w-[37%]">
+        <div className="flex flex-col gap-5 lg:w-[37%] justify-center">
           <span className="ml-3">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -65,7 +65,7 @@ const Categories = () => {
               </g>
             </svg>
           </span>
-          <h2 className="text-4xl font-bold font-nokara leading-[1.5em]">
+          <h2 className="lg:text-4xl text-3xl font-bold font-nokara leading-[1.5em]">
             Explore New Lifestyles
           </h2>
           <p className="text-base font-thin leading-7 mb-2">

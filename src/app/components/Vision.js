@@ -14,9 +14,9 @@ const Vision = () => {
     return (
         <>
             <section className="bg-bgGray">
-                <div className="lg:container mx-auto py-24 lg:px-0 px-4">
-                    <div className="mb-20">
-                        <h2 className="text-4xl font-bold font-nokara mb-6">
+                <div className="lg:py-24 lg:px-10 px-5 py-16 text-center">
+                   
+                        <h2 className="lg:text-4xl text-3xl font-bold font-nokara mb-6">
                         Vision Statement
                         </h2>
                         <p className="text-4xl font-thin ">
@@ -24,7 +24,6 @@ const Vision = () => {
                         </p>
                     </div>
 
-                </div>
             </section>
         </>
     );

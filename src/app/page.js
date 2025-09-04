@@ -8,6 +8,7 @@ import KeepInTouch from "./components/KeepInTouch";
 import FeaturedCarousel from "./components/FeaturedCarousel";
 import Services from "./components/Services";
 import Vision from "./components/Vision";
+import PhaseTest from "./components/PhaseTest";
 
 export default function Home() {
   return (
@@ -18,7 +19,8 @@ export default function Home() {
       <Vision />
       {/* <Services /> */}
       {/* <AboutUsSection /> */}
-      <DhaPhases />
+      {/* <DhaPhases /> */}
+      <PhaseTest />
       <KeepInTouch />
     </>
   );

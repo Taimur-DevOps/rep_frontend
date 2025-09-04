@@ -70,7 +70,7 @@ const Pagination = ({
   }
 
   return (
-    <div className="w-full flex justify-center items-center mt-4">
+    <div className="w-full flex justify-center items-center mt-12">
       <ul className="flex items-center -space-x-px h-10 text-base gap-[8px]">
         {/* Previous Button */}
         <li>
